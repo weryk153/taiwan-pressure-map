@@ -1,0 +1,32 @@
+{
+  "app": {
+    "title": "台灣縣市壓力地圖",
+    "subtitle": "各縣市綜合壓力指數（示範資料）"
+  },
+  "metrics": {
+    "composite": "綜合",
+    "economic": "經濟壓力",
+    "housing": "居住壓力",
+    "demographic": "人口壓力",
+    "safety": "治安",
+    "healthcare": "醫療資源"
+  },
+  "panel": {
+    "colorBy": "著色維度",
+    "ranking": "縣市排行榜"
+  },
+  "drawer": {
+    "score": "壓力指數",
+    "subScores": "子指標",
+    "trend": "趨勢",
+    "events": "事件",
+    "confidence": "資料信心",
+    "asOf": "資料時間",
+    "noEvents": "目前無事件資料"
+  },
+  "legend": {
+    "title": "壓力等級"
+  },
+  "level": { "low": "低", "medium": "中", "high": "高", "critical": "危急" },
+  "state": { "loading": "載入中…", "error": "載入失敗", "empty": "無資料" }
+}
