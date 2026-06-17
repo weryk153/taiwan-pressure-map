@@ -21,10 +21,26 @@ export interface CountySignal {
 export interface CountyRisk {
   code: CountyCode
   name: string
-  score: number // 0–100
-  subScores: Record<MetricKey, number>
-  confidence: number // 0–1
+  score: number | null
+  subScores: Partial<Record<MetricKey, number>>
+  confidence: number
+  asOf: string | null
+  hasData: boolean
+}
+
+export interface SourceMeta {
+  metric: MetricKey
+  label: string
+  agency: string
   asOf: string
+  status: 'live' | 'missing'
+  url?: string
+}
+
+export interface PressureData {
+  signals: CountySignal[]
+  sources: SourceMeta[]
+  builtAt: string
 }
 
 export type RiskLevel = 'low' | 'medium' | 'high' | 'critical'

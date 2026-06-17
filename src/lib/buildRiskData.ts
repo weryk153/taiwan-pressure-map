@@ -1,5 +1,4 @@
 import { COUNTIES } from './counties'
-import { buildMockSignals } from './mock'
 import { calculateRiskScore } from './score'
 import {
   METRIC_KEYS,
@@ -9,31 +8,43 @@ import {
 } from './types'
 
 /**
- * 由訊號組出每縣市的 CountyRisk。
- * #1：realSignals 省略 → 全用 mock。#2~#4：傳入真實訊號覆蓋對應 (code, metric)，
- * 同一格多來源時取較大值（MAX），與全球版一致。
+ * 由真實訊號組出每縣市 CountyRisk。無 mock：缺的指標就缺。
+ * 同一 (code, metric) 多來源取 MAX。零訊號縣市 → 無資料。
  */
-export function buildRiskData(realSignals: CountySignal[] = []): CountyRisk[] {
+export function buildRiskData(signals: CountySignal[]): CountyRisk[] {
+  const byCounty = new Map<string, Map<MetricKey, CountySignal>>()
+  for (const s of signals) {
+    if (!byCounty.has(s.code)) byCounty.set(s.code, new Map())
+    const m = byCounty.get(s.code)!
+    const existing = m.get(s.metric)
+    if (!existing || s.value > existing.value) m.set(s.metric, s)
+  }
+
   return COUNTIES.map((county) => {
-    const byMetric = new Map<MetricKey, CountySignal>()
-    for (const s of buildMockSignals(county.code)) byMetric.set(s.metric, s)
-    for (const s of realSignals) {
-      if (s.code !== county.code) continue
-      const existing = byMetric.get(s.metric)
-      if (!existing || s.value > existing.value) byMetric.set(s.metric, s)
-    }
-
-    const subScores = {} as Record<MetricKey, number>
+    const m = byCounty.get(county.code)
+    const subScores: Partial<Record<MetricKey, number>> = {}
     let confSum = 0
-    for (const k of METRIC_KEYS) {
-      const sig = byMetric.get(k)!
-      subScores[k] = sig.value
-      confSum += sig.confidence
+    let n = 0
+    let asOf: string | null = null
+    if (m) {
+      for (const k of METRIC_KEYS) {
+        const sig = m.get(k)
+        if (!sig) continue
+        subScores[k] = sig.value
+        confSum += sig.confidence
+        n += 1
+        if (sig.asOf && (!asOf || sig.asOf > asOf)) asOf = sig.asOf
+      }
     }
-    const score = calculateRiskScore(subScores)
-    const confidence = Math.round((confSum / METRIC_KEYS.length) * 100) / 100
-    const asOf = byMetric.get('economic')!.asOf
-
-    return { code: county.code, name: county.name, score, subScores, confidence, asOf }
+    const hasData = n > 0
+    return {
+      code: county.code,
+      name: county.name,
+      score: hasData ? calculateRiskScore(subScores) : null,
+      subScores,
+      confidence: hasData ? Math.round((confSum / n) * 100) / 100 : 0,
+      asOf,
+      hasData,
+    }
   })
 }
