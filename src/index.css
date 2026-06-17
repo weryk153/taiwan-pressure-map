@@ -1,42 +1,66 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #08090c;       /* 海／底色（近黑） */
-  --color-land: #15171d;     /* 縣市陸地 */
-  --color-land-sel: #232833; /* 選中縣市陸地 */
-  --color-panel: #0d0f13;    /* 面板 */
-  --color-edge: #ffffff14;   /* 髮絲線 ~8% */
-  --color-accent: #4ec9a3;   /* 克制的青綠 accent */
-  --color-ink: #e7e9ec;
-  --color-muted: #8b93a1;
+  --color-paper: #f4efe4;    /* 米白紙底 */
+  --color-paper-2: #ece4d4;  /* 次層／hover */
+  --color-ink: #232019;      /* 深墨 */
+  --color-ink-2: #6f6657;    /* 次要墨色（暖灰） */
+  --color-rule: #d3c8b2;     /* 髮絲線（暖） */
+  --color-accent: #b5532f;   /* 磚紅 */
 
   --font-sans: 'Noto Sans TC', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+  --font-serif: 'Noto Serif TC', 'Fraunces', Georgia, serif;
+  --font-display: 'Fraunces', 'Noto Serif TC', Georgia, serif;
 }
 
 html, body, #root {
   height: 100%;
   margin: 0;
-  background: var(--color-bg);
+  background: var(--color-paper);
   color: var(--color-ink);
   font-family: var(--font-sans);
 }
 
 * { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 
-/* 細捲軸 */
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-thumb { background: #ffffff1a; border-radius: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
+/* 紙紋 grain：細微噪點疊在整頁，做出印刷紙質 */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.045;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
 
-/* 小段落標題：前置一段 accent 短線（情報感） */
-.section-label::before {
+/* editorial kicker：小字 + 字距 + 前置磚紅短線 */
+.kicker {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--color-ink-2);
+  display: inline-flex;
+  align-items: center;
+}
+.kicker::before {
   content: '';
   display: inline-block;
-  width: 10px;
+  width: 16px;
   height: 1px;
   background: var(--color-accent);
-  vertical-align: middle;
-  margin-right: 7px;
-  opacity: 0.8;
+  margin-right: 8px;
 }
+
+/* 細捲軸（淺色） */
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-thumb { background: #2320191f; border-radius: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* 載入揭示：輕微上浮淡入 */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: none; }
+}
+.rise { animation: rise 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both; }

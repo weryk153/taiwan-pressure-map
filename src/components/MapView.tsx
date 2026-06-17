@@ -12,12 +12,12 @@ function valueFor(r: CountyRisk, colorBy: ColorBy): number {
   return colorBy === 'composite' ? r.score : r.subScores[colorBy]
 }
 
-// 極簡底圖：海＝近黑背景，縣市面由我們的 GeoJSON 鋪上熱度色（資料即圖）。
+// 紙上地圖：海＝紙底（融入頁面，如印刷圖），縣市面鋪熱度色。
 const STYLE = {
   version: 8 as const,
   glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
   sources: {},
-  layers: [{ id: 'bg', type: 'background' as const, paint: { 'background-color': '#0a0c10' } }],
+  layers: [{ id: 'bg', type: 'background' as const, paint: { 'background-color': '#f4efe4' } }],
 }
 
 interface Props {
@@ -37,7 +37,7 @@ export function MapView({ risks, colorBy, selectedCode, onSelect }: Props) {
 
   const byCode = useMemo(() => new Map(risks.map((r) => [r.code, r])), [risks])
 
-  // 每個縣市面注入 _color（熱度色）與 _label（分數）。fill / line / symbol 共用此 source。
+  // 每縣市面注入熱度色
   const fillGeo = useMemo(() => {
     if (!geo) return null
     return {
@@ -45,15 +45,12 @@ export function MapView({ risks, colorBy, selectedCode, onSelect }: Props) {
       features: geo.features.map((f: any) => {
         const r = byCode.get(f.properties.COUNTYCODE)
         const v = r ? valueFor(r, colorBy) : 0
-        return {
-          ...f,
-          properties: { ...f.properties, _color: scoreColor(v), _label: r ? String(v) : '', _v: v },
-        }
+        return { ...f, properties: { ...f.properties, _color: scoreColor(v) } }
       }),
     }
   }, [geo, byCode, colorBy])
 
-  // 標籤點：每縣市恰一個（質心），避免 MultiPolygon 離島逐島重複標號
+  // 標籤點：每縣市恰一個（質心），避免離島逐島重複標號
   const labelGeo = useMemo(() => {
     if (!geo) return null
     const centroids = computeCentroids(geo)
@@ -75,7 +72,7 @@ export function MapView({ risks, colorBy, selectedCode, onSelect }: Props) {
   useEffect(() => {
     if (!geo || !mapRef.current) return
     const [minX, minY, maxX, maxY] = bbox(geo)
-    mapRef.current.fitBounds([[minX, minY], [maxX, maxY]], { padding: 56, maxZoom: 8.5, duration: 0 })
+    mapRef.current.fitBounds([[minX, minY], [maxX, maxY]], { padding: 64, maxZoom: 8.5, duration: 0 })
   }, [geo])
 
   const sel = selectedCode ?? ''
@@ -95,32 +92,21 @@ export function MapView({ risks, colorBy, selectedCode, onSelect }: Props) {
       >
         {fillGeo && (
           <Source id="counties" type="geojson" data={fillGeo}>
-            {/* 海岸柔光：寬、模糊、低透明，把整座島從海面上浮起來 */}
-            <Layer
-              id="county-glow"
-              type="line"
-              paint={{
-                'line-color': '#7fb3c9',
-                'line-width': 7,
-                'line-blur': 8,
-                'line-opacity': 0.07,
-              }}
-            />
             <Layer
               id="county-fill"
               type="fill"
               paint={{
                 'fill-color': ['get', '_color'],
-                'fill-opacity': ['case', ['==', ['get', 'COUNTYCODE'], sel], 1, 0.88],
+                'fill-opacity': ['case', ['==', ['get', 'COUNTYCODE'], sel], 1, 0.9],
               }}
             />
             <Layer
               id="county-line"
               type="line"
               paint={{
-                'line-color': ['case', ['==', ['get', 'COUNTYCODE'], sel], '#e7f6ef', '#0a0c10'],
-                'line-opacity': ['case', ['==', ['get', 'COUNTYCODE'], sel], 1, 0.45],
-                'line-width': ['case', ['==', ['get', 'COUNTYCODE'], sel], 1.8, 0.6],
+                'line-color': ['case', ['==', ['get', 'COUNTYCODE'], sel], '#b5532f', '#232019'],
+                'line-opacity': ['case', ['==', ['get', 'COUNTYCODE'], sel], 1, 0.3],
+                'line-width': ['case', ['==', ['get', 'COUNTYCODE'], sel], 2, 0.6],
               }}
             />
           </Source>
@@ -135,23 +121,18 @@ export function MapView({ risks, colorBy, selectedCode, onSelect }: Props) {
                 'text-font': ['Open Sans Semibold'],
                 'text-size': 12,
                 'text-allow-overlap': false,
-                'symbol-sort-key': ['-', 100, ['get', '_v']], // 高分優先佔位
+                'symbol-sort-key': ['-', 100, ['get', '_v']],
               }}
               paint={{
-                'text-color': '#f4f6f8',
-                'text-halo-color': '#000000',
-                'text-halo-width': 1.2,
-                'text-halo-blur': 0.4,
+                'text-color': '#231f18',
+                'text-halo-color': '#f4efe4',
+                'text-halo-width': 1.5,
+                'text-halo-blur': 0.2,
               }}
             />
           </Source>
         )}
       </MapGL>
-      {/* 氣氛：邊緣壓暗的暈影，讓畫面聚焦、不再是死黑空洞 */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{ background: 'radial-gradient(ellipse 70% 70% at 56% 46%, transparent 45%, rgba(0,0,0,0.5) 100%)' }}
-      />
     </div>
   )
 }

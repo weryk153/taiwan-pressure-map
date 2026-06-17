@@ -3,19 +3,16 @@ import { scoreColor } from '@/lib/colors'
 
 export function Legend() {
   const { t } = useTranslation()
-  // 連續色帶 + 兩端標記；圓越大＝壓力越高
   const ramp = [0, 20, 40, 60, 80, 100]
   return (
-    <div className="absolute bottom-4 left-4 bg-[var(--color-panel)]/85 backdrop-blur-sm border border-[var(--color-edge)] rounded-md px-3 py-2.5">
-      <div className="section-label font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-muted)] mb-2">
-        {t('legend.title')}
-      </div>
-      <div className="flex h-1.5 w-40 rounded-full overflow-hidden">
+    <div className="absolute bottom-5 left-5 bg-[var(--color-paper)]/85 backdrop-blur-sm border border-[var(--color-ink)]/15 rounded-sm px-3.5 py-2.5">
+      <div className="kicker mb-2">{t('legend.title')}</div>
+      <div className="flex h-2 w-44 rounded-sm overflow-hidden">
         {ramp.map((s) => (
           <div key={s} className="flex-1" style={{ background: scoreColor(s) }} />
         ))}
       </div>
-      <div className="flex justify-between font-mono text-[9px] text-white/40 mt-1">
+      <div className="flex justify-between font-display text-[10px] text-[var(--color-ink-2)] mt-1 tabular-nums">
         <span>0 低</span>
         <span>100 危急</span>
       </div>

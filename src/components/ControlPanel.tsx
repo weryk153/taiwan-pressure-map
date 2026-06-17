@@ -19,20 +19,18 @@ export function ControlPanel({ risks, colorBy, onColorBy, selectedCode, onSelect
   const ranked = [...risks].sort((a, b) => valueFor(b) - valueFor(a))
 
   return (
-    <aside className="w-72 shrink-0 h-full overflow-y-auto bg-[var(--color-panel)] border-r border-[var(--color-edge)] p-4 flex flex-col gap-5">
+    <aside className="w-[19rem] shrink-0 h-full overflow-y-auto border-r border-[var(--color-ink)]/15 px-6 py-5 flex flex-col gap-7 bg-[var(--color-paper)] rise">
       <div>
-        <h2 className="section-label font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-muted)] mb-2.5">
-          {t('panel.colorBy')}
-        </h2>
-        <div className="flex flex-wrap gap-1.5">
+        <div className="kicker mb-3">著色維度</div>
+        <div className="flex flex-wrap gap-x-4 gap-y-2">
           {options.map((o) => (
             <button
               key={o}
               onClick={() => onColorBy(o)}
-              className={`px-2.5 py-1 rounded text-xs transition border ${
+              className={`text-sm pb-0.5 border-b transition ${
                 colorBy === o
-                  ? 'bg-[var(--color-accent)] text-black border-transparent font-medium'
-                  : 'bg-transparent text-[var(--color-muted)] border-[var(--color-edge)] hover:text-[var(--color-ink)] hover:border-white/25'
+                  ? 'border-[var(--color-accent)] text-[var(--color-accent)] font-medium'
+                  : 'border-transparent text-[var(--color-ink-2)] hover:text-[var(--color-ink)]'
               }`}
             >
               {t(`metrics.${o}`)}
@@ -42,29 +40,34 @@ export function ControlPanel({ risks, colorBy, onColorBy, selectedCode, onSelect
       </div>
 
       <div className="flex-1">
-        <h2 className="section-label font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-muted)] mb-2">
-          {t('panel.ranking')}
-        </h2>
-        <ol className="flex flex-col">
+        <div className="kicker mb-1">縣市排行</div>
+        <ol>
           {ranked.map((r, i) => {
             const v = valueFor(r)
             const active = selectedCode === r.code
             return (
-              <li key={r.code}>
+              <li key={r.code} className="border-b border-[var(--color-ink)]/10 last:border-0">
                 <button
                   onClick={() => onSelect(r.code)}
-                  className={`group relative w-full flex items-center gap-2.5 px-2 py-1.5 rounded-sm text-left text-sm overflow-hidden transition ${
-                    active ? 'bg-white/[0.06]' : 'hover:bg-white/[0.03]'
-                  }`}
+                  className="group w-full flex items-center gap-3 py-2 text-left transition-colors"
                 >
-                  {/* 列內微長條：寬度 ∝ 分數，做出資料感 */}
+                  <span className="font-display text-xs w-5 text-right text-[var(--color-ink-2)]/60 tabular-nums">
+                    {i + 1}
+                  </span>
                   <span
-                    className="absolute inset-y-1 left-0 rounded-r-sm transition-all"
-                    style={{ width: `${v}%`, background: scoreColor(v), opacity: active ? 0.22 : 0.12 }}
-                  />
-                  <span className="relative font-mono text-[11px] w-4 text-right text-white/30 tabular-nums">{i + 1}</span>
-                  <span className={`relative flex-1 ${active ? 'text-[var(--color-ink)]' : 'text-white/80'}`}>{r.name}</span>
-                  <span className="relative font-mono w-8 text-right tabular-nums font-medium" style={{ color: scoreColor(v) }}>
+                    className={`flex-1 text-[15px] transition-colors ${
+                      active ? 'text-[var(--color-accent)] font-medium' : 'text-[var(--color-ink)] group-hover:text-[var(--color-accent)]'
+                    }`}
+                  >
+                    {r.name}
+                  </span>
+                  <span className="w-16 h-[3px] rounded-full bg-[var(--color-ink)]/10 relative overflow-hidden">
+                    <span
+                      className="absolute inset-y-0 left-0 rounded-full"
+                      style={{ width: `${v}%`, background: scoreColor(v) }}
+                    />
+                  </span>
+                  <span className="font-display text-[15px] w-7 text-right tabular-nums" style={{ color: scoreColor(v) }}>
                     {v}
                   </span>
                 </button>

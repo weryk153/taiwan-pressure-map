@@ -1,12 +1,12 @@
 import type { RiskLevel } from './types'
 
-/** 低→危急 的熱度色階（冷→暖，刻意拉開明度與色相讓中段也分得出來） */
+/** 紙上熱度色階（低＝淡麥，往上漸深至磚紅、深栗，配米白紙底） */
 const STOPS: { at: number; color: string }[] = [
-  { at: 0, color: '#2f5d8a' },   // 低：沉穩鋼藍
-  { at: 30, color: '#3a8f86' },  // 偏低：青
-  { at: 50, color: '#cba44e' },  // 中：金
-  { at: 72, color: '#d4733a' },  // 高：橙
-  { at: 100, color: '#c43a44' }, // 危急：紅
+  { at: 0, color: '#e7d2a0' },   // 低：淡麥
+  { at: 30, color: '#d6a85c' },  // 偏低：赭黃
+  { at: 50, color: '#c47e3c' },  // 中：琥珀橙
+  { at: 75, color: '#b5532f' },  // 高：磚紅
+  { at: 100, color: '#8a2f23' }, // 危急：深栗
 ]
 
 function lerp(a: number, b: number, t: number): number {
