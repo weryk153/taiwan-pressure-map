@@ -53,17 +53,18 @@ export function ControlPanel({ risks, colorBy, onColorBy, selectedCode, onSelect
               <li key={r.code}>
                 <button
                   onClick={() => onSelect(r.code)}
-                  className={`group w-full flex items-center gap-2.5 px-2 py-1.5 rounded text-left text-sm transition ${
-                    active ? 'bg-white/[0.07]' : 'hover:bg-white/[0.04]'
+                  className={`group relative w-full flex items-center gap-2.5 px-2 py-1.5 rounded-sm text-left text-sm overflow-hidden transition ${
+                    active ? 'bg-white/[0.06]' : 'hover:bg-white/[0.03]'
                   }`}
                 >
-                  <span className="font-mono text-[11px] w-4 text-right text-white/30 tabular-nums">{i + 1}</span>
+                  {/* 列內微長條：寬度 ∝ 分數，做出資料感 */}
                   <span
-                    className="w-1.5 h-1.5 rounded-full shrink-0"
-                    style={{ background: scoreColor(v) }}
+                    className="absolute inset-y-1 left-0 rounded-r-sm transition-all"
+                    style={{ width: `${v}%`, background: scoreColor(v), opacity: active ? 0.22 : 0.12 }}
                   />
-                  <span className={`flex-1 ${active ? 'text-[var(--color-ink)]' : 'text-white/80'}`}>{r.name}</span>
-                  <span className="font-mono w-8 text-right tabular-nums font-medium" style={{ color: scoreColor(v) }}>
+                  <span className="relative font-mono text-[11px] w-4 text-right text-white/30 tabular-nums">{i + 1}</span>
+                  <span className={`relative flex-1 ${active ? 'text-[var(--color-ink)]' : 'text-white/80'}`}>{r.name}</span>
+                  <span className="relative font-mono w-8 text-right tabular-nums font-medium" style={{ color: scoreColor(v) }}>
                     {v}
                   </span>
                 </button>

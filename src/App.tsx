@@ -22,13 +22,17 @@ export default function App() {
 
   return (
     <div className="h-full flex flex-col">
-      <header className="px-5 py-2.5 border-b border-[var(--color-edge)] bg-[var(--color-panel)] flex items-center gap-3">
-        <span className="w-2 h-2 rounded-full bg-[var(--color-accent)] shrink-0" />
-        <h1 className="text-base font-bold tracking-wide">{t('app.title')}</h1>
-        <span className="font-mono text-[10px] tracking-[0.25em] uppercase text-[var(--color-muted)] hidden sm:inline">
-          TW · PRESSURE INDEX
+      <header className="px-5 h-12 flex items-center gap-3 border-b border-[var(--color-edge)] bg-[var(--color-panel)]">
+        <svg width="16" height="16" viewBox="0 0 16 16" className="text-[var(--color-accent)] shrink-0">
+          <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" strokeWidth="1.2" opacity="0.55" />
+          <circle cx="8" cy="8" r="2" fill="currentColor" />
+        </svg>
+        <h1 className="text-[15px] font-semibold tracking-wide text-[var(--color-ink)]">{t('app.title')}</h1>
+        <span className="h-3.5 w-px bg-[var(--color-edge)] hidden sm:block" />
+        <span className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-muted)] hidden sm:inline">
+          Taiwan Pressure Index
         </span>
-        <span className="ml-auto font-mono text-[10px] tracking-wider uppercase px-2 py-0.5 rounded border border-[var(--color-edge)] text-[var(--color-muted)]">
+        <span className="ml-auto font-mono text-[10px] tracking-wider uppercase px-2 py-1 rounded-sm border border-[var(--color-edge)] text-[var(--color-muted)]">
           示範資料
         </span>
       </header>
