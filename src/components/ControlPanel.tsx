@@ -19,16 +19,18 @@ export function ControlPanel({ risks, colorBy, onColorBy, selectedCode, onSelect
   const ranked = [...risks].sort((a, b) => valueFor(b) - valueFor(a))
 
   return (
-    <aside className="w-72 shrink-0 h-full overflow-y-auto bg-[var(--color-panel)] border-r border-white/10 p-4 flex flex-col gap-4">
+    <aside className="w-[19rem] shrink-0 h-full overflow-y-auto border-r border-[var(--color-ink)]/15 px-6 py-5 flex flex-col gap-7 bg-[var(--color-paper)] rise">
       <div>
-        <h2 className="text-xs uppercase tracking-wide text-white/50 mb-2">{t('panel.colorBy')}</h2>
-        <div className="flex flex-wrap gap-1.5">
+        <div className="kicker mb-3">著色維度</div>
+        <div className="flex flex-wrap gap-x-4 gap-y-2">
           {options.map((o) => (
             <button
               key={o}
               onClick={() => onColorBy(o)}
-              className={`px-2.5 py-1 rounded text-sm transition ${
-                colorBy === o ? 'bg-[var(--color-accent)] text-black' : 'bg-white/5 text-white/70 hover:bg-white/10'
+              className={`text-sm pb-0.5 border-b transition ${
+                colorBy === o
+                  ? 'border-[var(--color-accent)] text-[var(--color-accent)] font-medium'
+                  : 'border-transparent text-[var(--color-ink-2)] hover:text-[var(--color-ink)]'
               }`}
             >
               {t(`metrics.${o}`)}
@@ -38,27 +40,40 @@ export function ControlPanel({ risks, colorBy, onColorBy, selectedCode, onSelect
       </div>
 
       <div className="flex-1">
-        <h2 className="text-xs uppercase tracking-wide text-white/50 mb-2">{t('panel.ranking')}</h2>
-        <ol className="flex flex-col gap-1">
-          {ranked.map((r, i) => (
-            <li key={r.code}>
-              <button
-                onClick={() => onSelect(r.code)}
-                className={`w-full flex items-center gap-2 px-2 py-1.5 rounded text-left text-sm transition ${
-                  selectedCode === r.code ? 'bg-white/10' : 'hover:bg-white/5'
-                }`}
-              >
-                <span className="w-5 text-white/40 tabular-nums">{i + 1}</span>
-                <span className="flex-1">{r.name}</span>
-                <span
-                  className="w-9 text-right tabular-nums font-medium"
-                  style={{ color: scoreColor(valueFor(r)) }}
+        <div className="kicker mb-1">縣市排行</div>
+        <ol>
+          {ranked.map((r, i) => {
+            const v = valueFor(r)
+            const active = selectedCode === r.code
+            return (
+              <li key={r.code} className="border-b border-[var(--color-ink)]/10 last:border-0">
+                <button
+                  onClick={() => onSelect(r.code)}
+                  className="group w-full flex items-center gap-3 py-2 text-left transition-colors"
                 >
-                  {valueFor(r)}
-                </span>
-              </button>
-            </li>
-          ))}
+                  <span className="font-display text-xs w-5 text-right text-[var(--color-ink-2)]/60 tabular-nums">
+                    {i + 1}
+                  </span>
+                  <span
+                    className={`flex-1 text-[15px] transition-colors ${
+                      active ? 'text-[var(--color-accent)] font-medium' : 'text-[var(--color-ink)] group-hover:text-[var(--color-accent)]'
+                    }`}
+                  >
+                    {r.name}
+                  </span>
+                  <span className="w-16 h-[3px] rounded-full bg-[var(--color-ink)]/10 relative overflow-hidden">
+                    <span
+                      className="absolute inset-y-0 left-0 rounded-full"
+                      style={{ width: `${v}%`, background: scoreColor(v) }}
+                    />
+                  </span>
+                  <span className="font-display text-[15px] w-7 text-right tabular-nums" style={{ color: scoreColor(v) }}>
+                    {v}
+                  </span>
+                </button>
+              </li>
+            )
+          })}
         </ol>
       </div>
     </aside>

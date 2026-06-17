@@ -1,7 +1,4 @@
 import { useTranslation } from 'react-i18next'
-import {
-  Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer,
-} from 'recharts'
 import { scoreColor, LEVEL_LABEL } from '@/lib/colors'
 import { toRiskLevel } from '@/lib/score'
 import { METRIC_KEYS, type CountyRisk } from '@/lib/types'
@@ -16,41 +13,63 @@ export function CountyDrawer({ risk, onClose }: Props) {
   if (!risk) return null
 
   const level = toRiskLevel(risk.score)
-  const radarData = METRIC_KEYS.map((k) => ({
-    metric: t(`metrics.${k}`),
-    value: risk.subScores[k],
-  }))
+  const color = scoreColor(risk.score)
 
   return (
-    <div className="absolute top-0 right-0 h-full w-80 bg-[var(--color-panel)] border-l border-white/10 p-5 overflow-y-auto shadow-2xl">
-      <div className="flex items-start justify-between mb-4">
-        <h2 className="text-xl font-semibold">{risk.name}</h2>
-        <button onClick={onClose} className="text-white/40 hover:text-white text-lg leading-none">✕</button>
+    <div
+      key={risk.code}
+      className="absolute top-0 right-0 h-full w-[21rem] bg-[var(--color-paper)] border-l border-[var(--color-ink)]/15 px-6 py-6 overflow-y-auto rise"
+    >
+      <div className="flex items-start justify-between mb-6">
+        <div>
+          <div className="kicker mb-1.5">縣市檔案</div>
+          <h2 className="font-serif text-2xl font-bold tracking-tight">{risk.name}</h2>
+        </div>
+        <button
+          onClick={onClose}
+          className="text-[var(--color-ink-2)] hover:text-[var(--color-ink)] text-base leading-none mt-1 transition"
+          aria-label="關閉"
+        >
+          ✕
+        </button>
       </div>
 
-      <div className="flex items-baseline gap-2 mb-1">
-        <span className="text-4xl font-bold tabular-nums" style={{ color: scoreColor(risk.score) }}>
+      <div className="flex items-end gap-3 border-b border-[var(--color-ink)]/15 pb-5 mb-2">
+        <span className="font-display text-[68px] leading-[0.78] font-semibold tabular-nums" style={{ color }}>
           {risk.score}
         </span>
-        <span className="text-sm text-white/60">{t('drawer.score')} · {LEVEL_LABEL[level]}</span>
+        <div className="mb-1.5">
+          <div className="text-sm font-medium" style={{ color }}>{LEVEL_LABEL[level]}</div>
+          <div className="text-xs text-[var(--color-ink-2)]">{t('drawer.score')}</div>
+        </div>
       </div>
-      <p className="text-xs text-white/40 mb-5">
-        {t('drawer.confidence')}: {Math.round(risk.confidence * 100)}% · {t('drawer.asOf')}: {risk.asOf}
+      <p className="text-xs text-[var(--color-ink-2)] mb-7">
+        {t('drawer.confidence')} {Math.round(risk.confidence * 100)}% · {t('drawer.asOf')} {risk.asOf}
       </p>
 
-      <h3 className="text-xs uppercase tracking-wide text-white/50 mb-1">{t('drawer.subScores')}</h3>
-      <div className="h-56">
-        <ResponsiveContainer width="100%" height="100%">
-          <RadarChart data={radarData} outerRadius="70%">
-            <PolarGrid stroke="#ffffff20" />
-            <PolarAngleAxis dataKey="metric" tick={{ fill: '#ffffff99', fontSize: 11 }} />
-            <Radar dataKey="value" stroke="var(--color-accent)" fill="var(--color-accent)" fillOpacity={0.4} />
-          </RadarChart>
-        </ResponsiveContainer>
+      <div className="kicker mb-4">{t('drawer.subScores')}</div>
+      <div className="flex flex-col gap-3 mb-8">
+        {METRIC_KEYS.map((k) => {
+          const v = risk.subScores[k]
+          return (
+            <div key={k} className="flex items-center gap-3">
+              <span className="w-16 shrink-0 text-[13px] text-[var(--color-ink-2)]">{t(`metrics.${k}`)}</span>
+              <span className="flex-1 h-[5px] rounded-full bg-[var(--color-ink)]/10 overflow-hidden">
+                <span
+                  className="block h-full rounded-full transition-all"
+                  style={{ width: `${v}%`, background: scoreColor(v) }}
+                />
+              </span>
+              <span className="font-display text-sm tabular-nums w-6 text-right" style={{ color: scoreColor(v) }}>
+                {v}
+              </span>
+            </div>
+          )
+        })}
       </div>
 
-      <h3 className="text-xs uppercase tracking-wide text-white/50 mb-1 mt-4">{t('drawer.events')}</h3>
-      <p className="text-sm text-white/40">{t('drawer.noEvents')}</p>
+      <div className="kicker mb-2">{t('drawer.events')}</div>
+      <p className="text-sm text-[var(--color-ink-2)]">{t('drawer.noEvents')}</p>
     </div>
   )
 }
