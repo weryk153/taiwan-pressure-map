@@ -1,14 +1,22 @@
 import { useQuery } from '@tanstack/react-query'
 import { buildRiskData } from '@/lib/buildRiskData'
-import type { CountyRisk } from '@/lib/types'
+import type { CountyRisk, PressureData } from '@/lib/types'
 
-async function fetchRiskData(): Promise<CountyRisk[]> {
-  // #1：純 mock（同步包成 Promise）。#2~#4 在此改為先抓真實訊號再 buildRiskData(signals)。
-  return buildRiskData()
+export interface RiskBundle {
+  risks: CountyRisk[]
+  sources: PressureData['sources']
+  builtAt: string
+}
+
+async function fetchRiskData(): Promise<RiskBundle> {
+  const res = await fetch('/taiwan-pressure.json')
+  if (!res.ok) throw new Error(`載入壓力資料失敗：${res.status}`)
+  const data = (await res.json()) as PressureData
+  return { risks: buildRiskData(data.signals), sources: data.sources, builtAt: data.builtAt }
 }
 
 export function useRiskData() {
-  return useQuery<CountyRisk[]>({
+  return useQuery<RiskBundle>({
     queryKey: ['riskData'],
     queryFn: fetchRiskData,
     staleTime: Infinity,

@@ -1,0 +1,14 @@
+{
+  "signals": [
+    { "code": "63000", "metric": "economic", "value": 35, "confidence": 0.85, "asOf": "2024" },
+    { "code": "64000", "metric": "economic", "value": 48, "confidence": 0.85, "asOf": "2024" }
+  ],
+  "sources": [
+    { "metric": "economic", "label": "失業率", "agency": "主計總處", "asOf": "2024", "status": "live" },
+    { "metric": "housing", "label": "房價所得比", "agency": "內政部不動產資訊平台", "asOf": "-", "status": "missing" },
+    { "metric": "demographic", "label": "老化指數", "agency": "內政部戶政司", "asOf": "-", "status": "missing" },
+    { "metric": "safety", "label": "刑案發生率", "agency": "警政署", "asOf": "-", "status": "missing" },
+    { "metric": "healthcare", "label": "每萬人病床數", "agency": "衛福部", "asOf": "-", "status": "missing" }
+  ],
+  "builtAt": "2026-06-18T00:00:00.000Z"
+}
