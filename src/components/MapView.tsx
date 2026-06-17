@@ -83,6 +83,11 @@ export function MapView({ risks, colorBy, selectedCode, onSelect }: Props) {
         ref={mapRef}
         mapStyle={STYLE as any}
         initialViewState={{ longitude: 120.7, latitude: 23.8, zoom: 6.6 }}
+        minZoom={6}
+        maxZoom={9.5}
+        dragRotate={false}
+        touchPitch={false}
+        pitchWithRotate={false}
         interactiveLayerIds={['county-fill']}
         onClick={(e) => {
           const code = e.features?.[0]?.properties?.COUNTYCODE
