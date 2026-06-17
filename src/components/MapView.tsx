@@ -54,7 +54,7 @@ export function MapView({ risks, colorBy, selectedCode, onSelect }: Props) {
       features: geo.features.map((f: any) => {
         const r = byCode.get(f.properties.COUNTYCODE)
         const v = r ? valueFor(r, colorBy) : 0
-        return { ...f, properties: { ...f.properties, _v: v, _color: scoreColor(v) } }
+        return { ...f, properties: { ...f.properties, _color: scoreColor(v) } }
       }),
     }
   }, [geo, byCode, colorBy])
