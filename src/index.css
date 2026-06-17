@@ -1,9 +1,42 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #0a0e14;
-  --color-panel: #121821;
-  --color-accent: #38bdf8;
+  --color-bg: #08090c;       /* 海／底色（近黑） */
+  --color-land: #15171d;     /* 縣市陸地 */
+  --color-land-sel: #232833; /* 選中縣市陸地 */
+  --color-panel: #0d0f13;    /* 面板 */
+  --color-edge: #ffffff14;   /* 髮絲線 ~8% */
+  --color-accent: #4ec9a3;   /* 克制的青綠 accent */
+  --color-ink: #e7e9ec;
+  --color-muted: #8b93a1;
+
+  --font-sans: 'Noto Sans TC', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
 }
 
-html, body, #root { height: 100%; margin: 0; background: var(--color-bg); color: #e5e7eb; }
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+* { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+/* 細捲軸 */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: #ffffff1a; border-radius: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* 小段落標題：前置一段 accent 短線（情報感） */
+.section-label::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 1px;
+  background: var(--color-accent);
+  vertical-align: middle;
+  margin-right: 7px;
+  opacity: 0.8;
+}

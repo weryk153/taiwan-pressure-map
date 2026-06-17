@@ -16,41 +16,57 @@ export function CountyDrawer({ risk, onClose }: Props) {
   if (!risk) return null
 
   const level = toRiskLevel(risk.score)
+  const color = scoreColor(risk.score)
   const radarData = METRIC_KEYS.map((k) => ({
     metric: t(`metrics.${k}`),
     value: risk.subScores[k],
   }))
 
   return (
-    <div className="absolute top-0 right-0 h-full w-80 bg-[var(--color-panel)] border-l border-white/10 p-5 overflow-y-auto shadow-2xl">
-      <div className="flex items-start justify-between mb-4">
-        <h2 className="text-xl font-semibold">{risk.name}</h2>
-        <button onClick={onClose} className="text-white/40 hover:text-white text-lg leading-none">✕</button>
+    <div className="absolute top-0 right-0 h-full w-80 bg-[var(--color-panel)]/95 backdrop-blur-sm border-l border-[var(--color-edge)] p-5 overflow-y-auto">
+      <div className="flex items-start justify-between mb-5">
+        <h2 className="text-xl font-bold tracking-wide">{risk.name}</h2>
+        <button
+          onClick={onClose}
+          className="text-white/35 hover:text-white text-base leading-none mt-1 transition"
+          aria-label="關閉"
+        >
+          ✕
+        </button>
       </div>
 
-      <div className="flex items-baseline gap-2 mb-1">
-        <span className="text-4xl font-bold tabular-nums" style={{ color: scoreColor(risk.score) }}>
+      <div className="flex items-end gap-3 mb-1.5">
+        <span className="font-mono text-5xl font-semibold tabular-nums leading-none" style={{ color }}>
           {risk.score}
         </span>
-        <span className="text-sm text-white/60">{t('drawer.score')} · {LEVEL_LABEL[level]}</span>
+        <span
+          className="mb-1 font-mono text-[11px] uppercase tracking-wider px-2 py-0.5 rounded"
+          style={{ background: `${color}22`, color }}
+        >
+          {LEVEL_LABEL[level]}
+        </span>
       </div>
-      <p className="text-xs text-white/40 mb-5">
-        {t('drawer.confidence')}: {Math.round(risk.confidence * 100)}% · {t('drawer.asOf')}: {risk.asOf}
+      <p className="font-mono text-[10px] uppercase tracking-wide text-white/35 mb-6">
+        {t('drawer.score')} · {t('drawer.confidence')} {Math.round(risk.confidence * 100)}% · {risk.asOf}
       </p>
 
-      <h3 className="text-xs uppercase tracking-wide text-white/50 mb-1">{t('drawer.subScores')}</h3>
-      <div className="h-56">
+      <h3 className="section-label font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-muted)] mb-1">
+        {t('drawer.subScores')}
+      </h3>
+      <div className="h-56 -mx-2">
         <ResponsiveContainer width="100%" height="100%">
-          <RadarChart data={radarData} outerRadius="70%">
-            <PolarGrid stroke="#ffffff20" />
-            <PolarAngleAxis dataKey="metric" tick={{ fill: '#ffffff99', fontSize: 11 }} />
-            <Radar dataKey="value" stroke="var(--color-accent)" fill="var(--color-accent)" fillOpacity={0.4} />
+          <RadarChart data={radarData} outerRadius="68%">
+            <PolarGrid stroke="#ffffff18" />
+            <PolarAngleAxis dataKey="metric" tick={{ fill: '#ffffff88', fontSize: 11 }} />
+            <Radar dataKey="value" stroke="var(--color-accent)" fill="var(--color-accent)" fillOpacity={0.35} />
           </RadarChart>
         </ResponsiveContainer>
       </div>
 
-      <h3 className="text-xs uppercase tracking-wide text-white/50 mb-1 mt-4">{t('drawer.events')}</h3>
-      <p className="text-sm text-white/40">{t('drawer.noEvents')}</p>
+      <h3 className="section-label font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-muted)] mb-1.5 mt-5">
+        {t('drawer.events')}
+      </h3>
+      <p className="text-sm text-white/35">{t('drawer.noEvents')}</p>
     </div>
   )
 }

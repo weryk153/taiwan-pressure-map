@@ -19,16 +19,20 @@ export function ControlPanel({ risks, colorBy, onColorBy, selectedCode, onSelect
   const ranked = [...risks].sort((a, b) => valueFor(b) - valueFor(a))
 
   return (
-    <aside className="w-72 shrink-0 h-full overflow-y-auto bg-[var(--color-panel)] border-r border-white/10 p-4 flex flex-col gap-4">
+    <aside className="w-72 shrink-0 h-full overflow-y-auto bg-[var(--color-panel)] border-r border-[var(--color-edge)] p-4 flex flex-col gap-5">
       <div>
-        <h2 className="text-xs uppercase tracking-wide text-white/50 mb-2">{t('panel.colorBy')}</h2>
+        <h2 className="section-label font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-muted)] mb-2.5">
+          {t('panel.colorBy')}
+        </h2>
         <div className="flex flex-wrap gap-1.5">
           {options.map((o) => (
             <button
               key={o}
               onClick={() => onColorBy(o)}
-              className={`px-2.5 py-1 rounded text-sm transition ${
-                colorBy === o ? 'bg-[var(--color-accent)] text-black' : 'bg-white/5 text-white/70 hover:bg-white/10'
+              className={`px-2.5 py-1 rounded text-xs transition border ${
+                colorBy === o
+                  ? 'bg-[var(--color-accent)] text-black border-transparent font-medium'
+                  : 'bg-transparent text-[var(--color-muted)] border-[var(--color-edge)] hover:text-[var(--color-ink)] hover:border-white/25'
               }`}
             >
               {t(`metrics.${o}`)}
@@ -38,27 +42,34 @@ export function ControlPanel({ risks, colorBy, onColorBy, selectedCode, onSelect
       </div>
 
       <div className="flex-1">
-        <h2 className="text-xs uppercase tracking-wide text-white/50 mb-2">{t('panel.ranking')}</h2>
-        <ol className="flex flex-col gap-1">
-          {ranked.map((r, i) => (
-            <li key={r.code}>
-              <button
-                onClick={() => onSelect(r.code)}
-                className={`w-full flex items-center gap-2 px-2 py-1.5 rounded text-left text-sm transition ${
-                  selectedCode === r.code ? 'bg-white/10' : 'hover:bg-white/5'
-                }`}
-              >
-                <span className="w-5 text-white/40 tabular-nums">{i + 1}</span>
-                <span className="flex-1">{r.name}</span>
-                <span
-                  className="w-9 text-right tabular-nums font-medium"
-                  style={{ color: scoreColor(valueFor(r)) }}
+        <h2 className="section-label font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-muted)] mb-2">
+          {t('panel.ranking')}
+        </h2>
+        <ol className="flex flex-col">
+          {ranked.map((r, i) => {
+            const v = valueFor(r)
+            const active = selectedCode === r.code
+            return (
+              <li key={r.code}>
+                <button
+                  onClick={() => onSelect(r.code)}
+                  className={`group w-full flex items-center gap-2.5 px-2 py-1.5 rounded text-left text-sm transition ${
+                    active ? 'bg-white/[0.07]' : 'hover:bg-white/[0.04]'
+                  }`}
                 >
-                  {valueFor(r)}
-                </span>
-              </button>
-            </li>
-          ))}
+                  <span className="font-mono text-[11px] w-4 text-right text-white/30 tabular-nums">{i + 1}</span>
+                  <span
+                    className="w-1.5 h-1.5 rounded-full shrink-0"
+                    style={{ background: scoreColor(v) }}
+                  />
+                  <span className={`flex-1 ${active ? 'text-[var(--color-ink)]' : 'text-white/80'}`}>{r.name}</span>
+                  <span className="font-mono w-8 text-right tabular-nums font-medium" style={{ color: scoreColor(v) }}>
+                    {v}
+                  </span>
+                </button>
+              </li>
+            )
+          })}
         </ol>
       </div>
     </aside>

@@ -1,12 +1,11 @@
 import type { RiskLevel } from './types'
 
-/** 低→危急 的色階（深藍綠 → 黃 → 橙 → 紅） */
+/** 低→危急 的色階（克制、去飽和的情報風：冷灰藍 → 暗琥珀 → 暗橙 → 暗磚紅） */
 const STOPS: { at: number; color: string }[] = [
-  { at: 0, color: '#1e3a5f' },
-  { at: 25, color: '#3b9c8f' },
-  { at: 50, color: '#e0c341' },
-  { at: 75, color: '#e07b39' },
-  { at: 100, color: '#d6334c' },
+  { at: 0, color: '#5b6675' },
+  { at: 35, color: '#b08a4f' },
+  { at: 65, color: '#c2703a' },
+  { at: 100, color: '#b13a33' },
 ]
 
 function lerp(a: number, b: number, t: number): number {
