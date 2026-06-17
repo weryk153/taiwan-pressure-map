@@ -2,14 +2,15 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import MapGL, { Source, Layer, type MapRef } from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import bbox from '@turf/bbox'
-import { scoreColor } from '@/lib/colors'
+import { scoreColor, NO_DATA_COLOR } from '@/lib/colors'
 import { computeCentroids } from '@/lib/centroids'
 import type { CountyRisk, MetricKey } from '@/lib/types'
 
 type ColorBy = 'composite' | MetricKey
 
 function valueFor(r: CountyRisk, colorBy: ColorBy): number {
-  return colorBy === 'composite' ? r.score : r.subScores[colorBy]
+  if (colorBy === 'composite') return r.score ?? 0
+  return r.subScores[colorBy] ?? 0
 }
 
 // 紙上地圖：海＝紙底（融入頁面，如印刷圖），縣市面鋪熱度色。
@@ -44,8 +45,9 @@ export function MapView({ risks, colorBy, selectedCode, onSelect }: Props) {
       ...geo,
       features: geo.features.map((f: any) => {
         const r = byCode.get(f.properties.COUNTYCODE)
-        const v = r ? valueFor(r, colorBy) : 0
-        return { ...f, properties: { ...f.properties, _color: scoreColor(v) } }
+        const noData = !r || r.score === null
+        const v = !noData ? valueFor(r!, colorBy) : 0
+        return { ...f, properties: { ...f.properties, _color: noData ? NO_DATA_COLOR : scoreColor(v) } }
       }),
     }
   }, [geo, byCode, colorBy])
@@ -58,13 +60,9 @@ export function MapView({ risks, colorBy, selectedCode, onSelect }: Props) {
       type: 'FeatureCollection',
       features: risks.flatMap((r) => {
         const c = centroids[r.code]
-        if (!c) return []
+        if (!c || r.score === null) return []
         const v = valueFor(r, colorBy)
-        return [{
-          type: 'Feature',
-          properties: { label: String(v), _v: v },
-          geometry: { type: 'Point', coordinates: c },
-        }]
+        return [{ type: 'Feature', properties: { label: String(v), _v: v }, geometry: { type: 'Point', coordinates: c } }]
       }),
     }
   }, [geo, risks, colorBy])

@@ -15,11 +15,19 @@ interface Props {
 export function ControlPanel({ risks, colorBy, onColorBy, selectedCode, onSelect }: Props) {
   const { t } = useTranslation()
   const options: ColorBy[] = ['composite', ...METRIC_KEYS]
-  const valueFor = (r: CountyRisk) => (colorBy === 'composite' ? r.score : r.subScores[colorBy])
-  const ranked = [...risks].sort((a, b) => valueFor(b) - valueFor(a))
+  const valueFor = (r: CountyRisk): number | null =>
+    colorBy === 'composite' ? r.score : (r.subScores[colorBy] ?? null)
+  const ranked = [...risks].sort((a, b) => {
+    const av = valueFor(a)
+    const bv = valueFor(b)
+    if (av === null && bv === null) return 0
+    if (av === null) return 1
+    if (bv === null) return -1
+    return bv - av
+  })
 
   return (
-    <aside className="w-[19rem] shrink-0 h-full overflow-y-auto border-r border-[var(--color-ink)]/15 px-6 py-5 flex flex-col gap-7 bg-[var(--color-paper)] rise">
+    <div className="px-6 py-5 flex flex-col gap-7 bg-[var(--color-paper)] rise">
       <div>
         <div className="kicker mb-3">著色維度</div>
         <div className="flex flex-wrap gap-x-4 gap-y-2">
@@ -62,20 +70,21 @@ export function ControlPanel({ risks, colorBy, onColorBy, selectedCode, onSelect
                     {r.name}
                   </span>
                   <span className="w-16 h-[3px] rounded-full bg-[var(--color-ink)]/10 relative overflow-hidden">
-                    <span
-                      className="absolute inset-y-0 left-0 rounded-full"
-                      style={{ width: `${v}%`, background: scoreColor(v) }}
-                    />
+                    {v !== null && (
+                      <span className="absolute inset-y-0 left-0 rounded-full" style={{ width: `${v}%`, background: scoreColor(v) }} />
+                    )}
                   </span>
-                  <span className="font-display text-[15px] w-7 text-right tabular-nums" style={{ color: scoreColor(v) }}>
-                    {v}
-                  </span>
+                  {v === null ? (
+                    <span className="font-display text-[15px] w-7 text-right text-[var(--color-ink-2)]">—</span>
+                  ) : (
+                    <span className="font-display text-[15px] w-7 text-right tabular-nums" style={{ color: scoreColor(v) }}>{v}</span>
+                  )}
                 </button>
               </li>
             )
           })}
         </ol>
       </div>
-    </aside>
+    </div>
   )
 }

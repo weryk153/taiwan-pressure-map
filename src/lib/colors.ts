@@ -37,3 +37,5 @@ export const LEVEL_LABEL: Record<RiskLevel, string> = {
   high: '高',
   critical: '危急',
 }
+
+export const NO_DATA_COLOR = '#d9d1c0' // 紙感中性灰，用於無資料縣市
