@@ -1,0 +1,13 @@
+# Supabase
+.branches
+.temp
+
+# dotenvx
+.env.keys
+.env.local
+.env.*.local
+
+# 防禦：任何 supabase 下的 .env（保留範本）
+.env
+.env.*
+!.env.example

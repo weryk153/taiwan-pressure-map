@@ -5,6 +5,7 @@ import bbox from '@turf/bbox'
 import { scoreColor, NO_DATA_COLOR } from '@/lib/colors'
 import { computeCentroids } from '@/lib/centroids'
 import type { CountyRisk, MetricKey } from '@/lib/types'
+import type { DisasterEvent } from '@/lib/disasters/types'
 
 type ColorBy = 'composite' | MetricKey
 
@@ -26,9 +27,11 @@ interface Props {
   colorBy: ColorBy
   selectedCode: string | null
   onSelect: (code: string) => void
+  events?: DisasterEvent[]
+  showEvents?: boolean
 }
 
-export function MapView({ risks, colorBy, selectedCode, onSelect }: Props) {
+export function MapView({ risks, colorBy, selectedCode, onSelect, events, showEvents }: Props) {
   const mapRef = useRef<MapRef>(null)
   const [geo, setGeo] = useState<any>(null)
 
@@ -37,6 +40,27 @@ export function MapView({ risks, colorBy, selectedCode, onSelect }: Props) {
   }, [])
 
   const byCode = useMemo(() => new Map(risks.map((r) => [r.code, r])), [risks])
+
+  const quakeGeo = useMemo(() => {
+    const eqs = (events ?? []).filter((e) => e.type === 'earthquake' && e.lat != null && e.lon != null)
+    return {
+      type: 'FeatureCollection',
+      features: eqs.map((e) => ({
+        type: 'Feature',
+        properties: { mag: e.magnitude ?? 0, label: `M${e.magnitude ?? '?'}`, sev: e.severity },
+        geometry: { type: 'Point', coordinates: [e.lon, e.lat] },
+      })),
+    }
+  }, [events])
+
+  const alertedCodes = useMemo(() => {
+    const s = new Set<string>()
+    // 只描邊「嚴重」等級的縣市；常見且全台廣布的告警（強風/雷雨/高溫）改由 drawer/警示清單呈現，避免淹沒地圖
+    for (const e of events ?? []) {
+      if (e.type !== 'earthquake' && e.severity === 'severe') e.countyCodes.forEach((c) => s.add(c))
+    }
+    return s
+  }, [events])
 
   // 每縣市面注入熱度色
   const fillGeo = useMemo(() => {
@@ -47,10 +71,17 @@ export function MapView({ risks, colorBy, selectedCode, onSelect }: Props) {
         const r = byCode.get(f.properties.COUNTYCODE)
         const noData = !r || r.score === null
         const v = !noData ? valueFor(r!, colorBy) : 0
-        return { ...f, properties: { ...f.properties, _color: noData ? NO_DATA_COLOR : scoreColor(v) } }
+        return {
+          ...f,
+          properties: {
+            ...f.properties,
+            _color: noData ? NO_DATA_COLOR : scoreColor(v),
+            _alerted: alertedCodes.has(f.properties.COUNTYCODE) ? 1 : 0,
+          },
+        }
       }),
     }
-  }, [geo, byCode, colorBy])
+  }, [geo, byCode, colorBy, alertedCodes])
 
   // 標籤點：每縣市恰一個（質心），避免離島逐島重複標號
   const labelGeo = useMemo(() => {
@@ -112,6 +143,12 @@ export function MapView({ risks, colorBy, selectedCode, onSelect }: Props) {
                 'line-width': ['case', ['==', ['get', 'COUNTYCODE'], sel], 2, 0.6],
               }}
             />
+            <Layer
+              id="county-alert"
+              type="line"
+              filter={showEvents === false ? ['==', ['get', 'COUNTYCODE'], '__none__'] : ['==', ['get', '_alerted'], 1]}
+              paint={{ 'line-color': '#1f6f8b', 'line-width': 2, 'line-dasharray': [2, 1.5], 'line-opacity': 0.9 }}
+            />
           </Source>
         )}
         {labelGeo && (
@@ -132,6 +169,27 @@ export function MapView({ risks, colorBy, selectedCode, onSelect }: Props) {
                 'text-halo-width': 1.5,
                 'text-halo-blur': 0.2,
               }}
+            />
+          </Source>
+        )}
+        {showEvents !== false && (
+          <Source id="quakes" type="geojson" data={quakeGeo as any}>
+            <Layer
+              id="quake-dot"
+              type="circle"
+              paint={{
+                'circle-radius': ['interpolate', ['linear'], ['get', 'mag'], 3, 5, 6, 16],
+                'circle-color': '#1f6f8b',
+                'circle-opacity': 0.25,
+                'circle-stroke-color': '#1f6f8b',
+                'circle-stroke-width': 1.5,
+              }}
+            />
+            <Layer
+              id="quake-label"
+              type="symbol"
+              layout={{ 'text-field': ['get', 'label'], 'text-font': ['Open Sans Semibold'], 'text-size': 11, 'text-allow-overlap': true }}
+              paint={{ 'text-color': '#10394a', 'text-halo-color': '#f4efe4', 'text-halo-width': 1.4 }}
             />
           </Source>
         )}

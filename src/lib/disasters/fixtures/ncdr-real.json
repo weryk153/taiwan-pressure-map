@@ -1,0 +1,26 @@
+{
+  "title": "災害示警",
+  "entry": [
+    {
+      "id": "CWA-Weather_heat_202606181132001",
+      "title": "高溫",
+      "updated": "2026-06-18T11:32:00+08:00",
+      "summary": { "@type": "html", "#text": "西南風沉降影響，今(18)日中午前後彰化縣、雲林縣、花蓮縣、臺東縣為黃色燈號，請注意。" },
+      "category": { "@term": "高溫" }
+    },
+    {
+      "id": "WRA-flood-001",
+      "title": "淹水",
+      "updated": "2026-06-18T02:00:00+08:00",
+      "summary": { "@type": "html", "#text": "屏東縣部分地區一級淹水警戒。" },
+      "category": { "@term": "淹水" }
+    },
+    {
+      "id": "TPW-stop-001",
+      "title": "停水",
+      "updated": "2026-06-18T08:00:00+08:00",
+      "summary": { "@type": "html", "#text": "臺北市部分區域停水施工。" },
+      "category": { "@term": "停水" }
+    }
+  ]
+}

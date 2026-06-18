@@ -2,13 +2,17 @@ import { useTranslation } from 'react-i18next'
 import { scoreColor, LEVEL_LABEL } from '@/lib/colors'
 import { toRiskLevel } from '@/lib/score'
 import { METRIC_KEYS, type CountyRisk } from '@/lib/types'
+import type { DisasterEvent } from '@/lib/disasters/types'
+
+const SEV_COLOR: Record<string, string> = { severe: '#a8322b', warning: '#b5732f', info: '#6f6657' }
 
 interface Props {
   risk: CountyRisk | null
   onClose: () => void
+  events?: DisasterEvent[]
 }
 
-export function CountyDrawer({ risk, onClose }: Props) {
+export function CountyDrawer({ risk, onClose, events }: Props) {
   const { t } = useTranslation()
   if (!risk) return null
 
@@ -85,7 +89,21 @@ export function CountyDrawer({ risk, onClose }: Props) {
       </div>
 
       <div className="kicker mb-2">{t('drawer.events')}</div>
-      <p className="text-sm text-[var(--color-ink-2)]">{t('drawer.noEvents')}</p>
+      {(!events || events.length === 0) ? (
+        <p className="text-sm text-[var(--color-ink-2)]">{t('drawer.noEvents')}</p>
+      ) : (
+        <ul className="flex flex-col gap-2">
+          {events.map((e) => (
+            <li key={e.id} className="flex items-start gap-2 text-sm">
+              <span className="mt-1 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: SEV_COLOR[e.severity] }} />
+              <div>
+                <div className="text-[var(--color-ink)]">{e.title}</div>
+                <div className="text-[11px] text-[var(--color-ink-2)] font-display">{e.source} · {e.time?.slice(5, 16).replace('T', ' ')}</div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   )
 }
