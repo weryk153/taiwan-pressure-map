@@ -23,8 +23,11 @@
     "confidence": "資料信心",
     "asOf": "資料時間",
     "noEvents": "目前無事件資料",
-    "noData": "無資料"
+    "noData": "無資料",
+    "eventsNow": "進行中事件"
   },
+  "events": { "title": "目前警示", "none": "目前無警示", "toggle": "顯示即時災害" },
+  "severity": { "severe": "嚴重", "warning": "注意", "info": "資訊" },
   "legend": {
     "title": "壓力等級"
   },
