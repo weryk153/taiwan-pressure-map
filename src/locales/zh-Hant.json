@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "台灣縣市壓力指數",
-    "subtitle": "各縣市綜合壓力指數（示範資料）"
+    "subtitle": "各縣市綜合壓力指數"
   },
   "metrics": {
     "composite": "綜合",
@@ -22,11 +22,14 @@
     "events": "事件",
     "confidence": "資料信心",
     "asOf": "資料時間",
-    "noEvents": "目前無事件資料"
+    "noEvents": "目前無事件資料",
+    "noData": "無資料"
   },
   "legend": {
     "title": "壓力等級"
   },
   "level": { "low": "低", "medium": "中", "high": "高", "critical": "危急" },
-  "state": { "loading": "載入中…", "error": "載入失敗", "empty": "無資料" }
+  "state": { "loading": "載入中…", "error": "載入失敗", "empty": "無資料" },
+  "sources": { "title": "資料來源", "live": "已接", "missing": "無資料", "builtAt": "快照" },
+  "badge": { "real": "真實統計", "partial": "部分指標" }
 }

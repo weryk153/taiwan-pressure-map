@@ -4,6 +4,7 @@ import { MapView } from '@/components/MapView'
 import { ControlPanel } from '@/components/ControlPanel'
 import { CountyDrawer } from '@/components/CountyDrawer'
 import { Legend } from '@/components/Legend'
+import { DataSources } from '@/components/DataSources'
 import { useRiskData } from '@/hooks/useRiskData'
 import type { MetricKey } from '@/lib/types'
 
@@ -11,10 +12,12 @@ type ColorBy = 'composite' | MetricKey
 
 export default function App() {
   const { t } = useTranslation()
-  const { data: risks, isLoading, isError } = useRiskData()
+  const { data, isLoading, isError } = useRiskData()
   const [colorBy, setColorBy] = useState<ColorBy>('composite')
   const [selectedCode, setSelectedCode] = useState<string | null>(null)
 
+  const risks = data?.risks
+  const allLive = data ? data.sources.every((s) => s.status === 'live') : false
   const selected = useMemo(
     () => risks?.find((r) => r.code === selectedCode) ?? null,
     [risks, selectedCode],
@@ -30,7 +33,9 @@ export default function App() {
           </div>
           <div className="text-right shrink-0">
             <div className="font-display text-sm italic text-[var(--color-ink-2)]">Taiwan County Pressure Index</div>
-            <div className="text-[10px] tracking-[0.2em] uppercase text-[var(--color-ink-2)] mt-1">2026 · 示範資料</div>
+            <div className="text-[10px] tracking-[0.2em] uppercase text-[var(--color-ink-2)] mt-1">
+              2026 · {allLive ? t('badge.real') : t('badge.partial')}
+            </div>
           </div>
         </div>
       </header>
@@ -38,15 +43,20 @@ export default function App() {
       <div className="flex-1 flex relative overflow-hidden">
         {isLoading && <div className="m-auto text-[var(--color-ink-2)]">{t('state.loading')}</div>}
         {isError && <div className="m-auto text-[var(--color-accent)]">{t('state.error')}</div>}
-        {risks && (
+        {risks && data && (
           <>
-            <ControlPanel
-              risks={risks}
-              colorBy={colorBy}
-              onColorBy={setColorBy}
-              selectedCode={selectedCode}
-              onSelect={setSelectedCode}
-            />
+            <div className="w-[19rem] shrink-0 h-full flex flex-col border-r border-[var(--color-ink)]/15">
+              <div className="flex-1 overflow-y-auto">
+                <ControlPanel
+                  risks={risks}
+                  colorBy={colorBy}
+                  onColorBy={setColorBy}
+                  selectedCode={selectedCode}
+                  onSelect={setSelectedCode}
+                />
+              </div>
+              <DataSources sources={data.sources} builtAt={data.builtAt} />
+            </div>
             <div className="flex-1 relative">
               <MapView
                 risks={risks}

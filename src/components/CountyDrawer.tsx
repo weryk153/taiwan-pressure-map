@@ -12,8 +12,7 @@ export function CountyDrawer({ risk, onClose }: Props) {
   const { t } = useTranslation()
   if (!risk) return null
 
-  const level = toRiskLevel(risk.score)
-  const color = scoreColor(risk.score)
+  const has = risk.score !== null
 
   return (
     <div
@@ -34,23 +33,40 @@ export function CountyDrawer({ risk, onClose }: Props) {
         </button>
       </div>
 
-      <div className="flex items-end gap-3 border-b border-[var(--color-ink)]/15 pb-5 mb-2">
-        <span className="font-display text-[68px] leading-[0.78] font-semibold tabular-nums" style={{ color }}>
-          {risk.score}
-        </span>
-        <div className="mb-1.5">
-          <div className="text-sm font-medium" style={{ color }}>{LEVEL_LABEL[level]}</div>
-          <div className="text-xs text-[var(--color-ink-2)]">{t('drawer.score')}</div>
+      {has ? (
+        <div className="flex items-end gap-3 border-b border-[var(--color-ink)]/15 pb-5 mb-2">
+          <span className="font-display text-[68px] leading-[0.78] font-semibold tabular-nums" style={{ color: scoreColor(risk.score!) }}>
+            {risk.score}
+          </span>
+          <div className="mb-1.5">
+            <div className="text-sm font-medium" style={{ color: scoreColor(risk.score!) }}>{LEVEL_LABEL[toRiskLevel(risk.score!)]}</div>
+            <div className="text-xs text-[var(--color-ink-2)]">{t('drawer.score')}</div>
+          </div>
         </div>
-      </div>
-      <p className="text-xs text-[var(--color-ink-2)] mb-7">
-        {t('drawer.confidence')} {Math.round(risk.confidence * 100)}% · {t('drawer.asOf')} {risk.asOf}
-      </p>
+      ) : (
+        <div className="border-b border-[var(--color-ink)]/15 pb-5 mb-2">
+          <span className="font-serif text-3xl text-[var(--color-ink-2)]">{t('drawer.noData')}</span>
+        </div>
+      )}
+      {has && (
+        <p className="text-xs text-[var(--color-ink-2)] mb-7">
+          {t('drawer.confidence')} {Math.round(risk.confidence * 100)}% · {t('drawer.asOf')} {risk.asOf}
+        </p>
+      )}
 
       <div className="kicker mb-4">{t('drawer.subScores')}</div>
       <div className="flex flex-col gap-3 mb-8">
         {METRIC_KEYS.map((k) => {
           const v = risk.subScores[k]
+          if (v === undefined) {
+            return (
+              <div key={k} className="flex items-center gap-3">
+                <span className="w-16 shrink-0 text-[13px] text-[var(--color-ink-2)]">{t(`metrics.${k}`)}</span>
+                <span className="flex-1" />
+                <span className="font-display text-[13px] text-right text-[var(--color-ink-2)]">{t('drawer.noData')}</span>
+              </div>
+            )
+          }
           return (
             <div key={k} className="flex items-center gap-3">
               <span className="w-16 shrink-0 text-[13px] text-[var(--color-ink-2)]">{t(`metrics.${k}`)}</span>
