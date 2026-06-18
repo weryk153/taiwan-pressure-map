@@ -1,7 +1,9 @@
-import { writeFileSync } from 'node:fs'
+import { writeFileSync, readFileSync, existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { spawnSync } from 'node:child_process'
 import type { MetricKey } from '../src/lib/types'
+import { buildRiskData } from '../src/lib/buildRiskData'
+import { mergeHistory, type PressureHistory } from './history'
 import type { SourceFetcher, SourceResult } from './sources/types'
 import { economic } from './sources/economic'
 import { demographic } from './sources/demographic'
@@ -56,3 +58,13 @@ const out = {
 }
 writeFileSync(resolve('public/taiwan-pressure.json'), JSON.stringify(out, null, 2))
 console.log(`寫出 public/taiwan-pressure.json：${out.signals.length} signals`)
+
+// 累積歷史：把本期合成分數附加為一期
+const HISTORY_PATH = resolve('public/taiwan-pressure-history.json')
+const risks = buildRiskData(out.signals)
+const prevHistory: PressureHistory = existsSync(HISTORY_PATH)
+  ? (JSON.parse(readFileSync(HISTORY_PATH, 'utf-8')) as PressureHistory)
+  : { periods: [] }
+const history = mergeHistory(prevHistory, out.builtAt.slice(0, 10), risks)
+writeFileSync(HISTORY_PATH, JSON.stringify(history, null, 2))
+console.log(`寫出 public/taiwan-pressure-history.json：${history.periods.length} 期`)

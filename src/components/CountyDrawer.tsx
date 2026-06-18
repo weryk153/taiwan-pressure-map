@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next'
+import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 import { scoreColor, LEVEL_LABEL } from '@/lib/colors'
 import { toRiskLevel } from '@/lib/score'
-import { METRIC_KEYS, type CountyRisk } from '@/lib/types'
+import { METRIC_KEYS, type CountyRisk, type PressurePeriod } from '@/lib/types'
 import type { DisasterEvent } from '@/lib/disasters/types'
 
 const SEV_COLOR: Record<string, string> = { severe: '#a8322b', warning: '#b5732f', info: '#6f6657' }
@@ -10,13 +11,18 @@ interface Props {
   risk: CountyRisk | null
   onClose: () => void
   events?: DisasterEvent[]
+  history?: PressurePeriod[]
 }
 
-export function CountyDrawer({ risk, onClose, events }: Props) {
+export function CountyDrawer({ risk, onClose, events, history }: Props) {
   const { t } = useTranslation()
   if (!risk) return null
 
   const has = risk.score !== null
+
+  const series = (history ?? [])
+    .map((p) => ({ asOf: p.asOf.slice(5), score: p.scores[risk.code] }))
+    .filter((d): d is { asOf: string; score: number } => d.score != null)
 
   return (
     <div
@@ -86,6 +92,43 @@ export function CountyDrawer({ risk, onClose, events }: Props) {
             </div>
           )
         })}
+      </div>
+
+      <div className="kicker mb-2">趨勢</div>
+      <div className="mb-8">
+        {series.length >= 2 ? (
+          <div className="-ml-2">
+            <ResponsiveContainer width="100%" height={120}>
+              <LineChart data={series} margin={{ top: 6, right: 8, bottom: 0, left: 8 }}>
+                <XAxis
+                  dataKey="asOf"
+                  tick={{ fontSize: 10, fill: 'var(--color-ink-2)' }}
+                  tickLine={false}
+                  axisLine={{ stroke: 'var(--color-ink)', strokeOpacity: 0.15 }}
+                />
+                <YAxis domain={[0, 100]} hide />
+                <Line
+                  type="monotone"
+                  dataKey="score"
+                  stroke="var(--color-accent)"
+                  strokeWidth={2}
+                  dot={{ r: 2, fill: 'var(--color-accent)' }}
+                  isAnimationActive={false}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        ) : (
+          <div>
+            {series.length === 1 && (
+              <span className="font-display text-2xl tabular-nums" style={{ color: scoreColor(series[0].score) }}>
+                {series[0].score}
+              </span>
+            )}
+            <p className="text-xs text-[var(--color-ink-2)] mt-1">資料 {series.length} 期（累積中）</p>
+          </div>
+        )}
+        <p className="text-[11px] text-[var(--color-ink-2)] font-display mt-2">共 {series.length} 期</p>
       </div>
 
       <div className="kicker mb-2">{t('drawer.events')}</div>

@@ -81,6 +81,7 @@ export default function App() {
                 risk={selected}
                 onClose={() => setSelectedCode(null)}
                 events={selected ? byCounty[selected.code] ?? [] : []}
+                history={data.history}
               />
             </div>
           </>
