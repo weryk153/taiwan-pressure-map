@@ -16,6 +16,22 @@ export function Legend() {
         <span>0 低</span>
         <span>100 危急</span>
       </div>
+
+      <div className="kicker mt-3 mb-2">即時事件</div>
+      <div className="flex flex-col gap-1.5 text-[11px] text-[var(--color-ink-2)]">
+        <div className="flex items-center gap-2">
+          <svg width="22" height="14" viewBox="0 0 22 14" className="shrink-0">
+            <circle cx="11" cy="7" r="6" fill="#1f6f8b" fillOpacity="0.25" stroke="#1f6f8b" strokeWidth="1.5" />
+          </svg>
+          <span>地震（圈大小＝規模）</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <svg width="22" height="14" viewBox="0 0 22 14" className="shrink-0">
+            <line x1="1" y1="7" x2="21" y2="7" stroke="#1f6f8b" strokeWidth="2" strokeDasharray="4 3" />
+          </svg>
+          <span>嚴重告警縣市</span>
+        </div>
+      </div>
     </div>
   )
 }

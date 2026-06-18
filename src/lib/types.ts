@@ -44,3 +44,12 @@ export interface PressureData {
 }
 
 export type RiskLevel = 'low' | 'medium' | 'high' | 'critical'
+
+export interface PressurePeriod {
+  asOf: string
+  scores: Record<string, number>
+}
+
+export interface PressureHistory {
+  periods: PressurePeriod[]
+}

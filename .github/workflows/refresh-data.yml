@@ -1,0 +1,38 @@
+name: Refresh pressure data
+
+# 排程更新 #2 壓力統計快照（自動 4 指標；房價為手動季快照、不受此影響）。
+# 注意：GitHub runner 在美國，可能無法連台灣政府站（geo/TLS）；若抓不到則無變更、不 commit。
+on:
+  schedule:
+    - cron: '0 20 * * 1' # 每週一 20:00 UTC（台灣週二 04:00）
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: 抓取並重建快照（單一來源失敗不中止）
+        run: pnpm build:data || echo "build:data 部分/全部來源失敗（runner 可能連不到台灣政府站）"
+      - name: 有變更才提交
+        run: |
+          if ! git diff --quiet -- public/taiwan-pressure.json public/taiwan-pressure-history.json; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add public/taiwan-pressure.json public/taiwan-pressure-history.json
+            git commit -m "chore: 自動更新壓力資料快照（排程）"
+            git push
+          else
+            echo "資料無變更，略過 commit"
+          fi
