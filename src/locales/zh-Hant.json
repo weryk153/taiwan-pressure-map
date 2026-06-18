@@ -27,6 +27,13 @@
     "eventsNow": "進行中事件"
   },
   "events": { "title": "目前警示", "none": "目前無警示", "toggle": "顯示即時災害" },
+  "layers": {
+    "title": "事件圖層",
+    "incident": "重大新聞",
+    "alert": "災防告警",
+    "weather": "天氣特報",
+    "earthquake": "地震"
+  },
   "severity": { "severe": "嚴重", "warning": "注意", "info": "資訊" },
   "legend": {
     "title": "壓力等級"

@@ -20,9 +20,9 @@ describe('AlertsList', () => {
     expect(screen.getByText('目前無警示')).toBeInTheDocument()
   })
 
-  it('prefixes an incident row with [新聞] 並標注區域', () => {
+  it('prefixes an incident row with [重大新聞] 並標注區域', () => {
     render(<AlertsList events={[incident]} />)
-    expect(screen.getByText('[新聞]')).toBeInTheDocument()
+    expect(screen.getByText('[重大新聞]')).toBeInTheDocument()
     expect(screen.getByText('新聞標題')).toBeInTheDocument()
     expect(screen.getByText('臺北市')).toBeInTheDocument() // 標注區域
   })

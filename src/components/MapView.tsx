@@ -4,6 +4,7 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import bbox from '@turf/bbox'
 import { scoreColor, NO_DATA_COLOR } from '@/lib/colors'
 import type { CountyRisk, MetricKey } from '@/lib/types'
+import type { Severity } from '@/lib/disasters/types'
 
 type ColorBy = 'composite' | MetricKey
 
@@ -21,44 +22,62 @@ const STYLE = {
 }
 const PAPER = '#f4efe4'
 
+interface Mark {
+  code: string
+  severity: Severity
+  count: number
+}
+
 interface Props {
   risks: CountyRisk[]
   colorBy: ColorBy
   selectedCode: string | null
   onSelect: (code: string) => void
   highlightCodes?: string[] // 點選某事件時，高亮它影響的縣市
+  marks?: Mark[] // 勾選的事件圖層：受影響縣市的事件圓點
 }
 
-export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes }: Props) {
+export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes, marks }: Props) {
   const mapRef = useRef<MapRef>(null)
   const [geo, setGeo] = useState<any>(null)
+  const [towns, setTowns] = useState<any>(null)
+  const [zoomedIn, setZoomedIn] = useState(false) // 是否已拉近到需要鄉鎮界線
 
   useEffect(() => {
     fetch('/taiwan-counties.json').then((r) => r.json()).then(setGeo)
   }, [])
 
+  // 拉近後才載入鄉鎮市區界線（676KB，延遲載入避免拖慢首屏）
+  useEffect(() => {
+    if (!zoomedIn || towns) return
+    fetch('/taiwan-towns.json').then((r) => r.json()).then(setTowns).catch(() => {})
+  }, [zoomedIn, towns])
+
   const byCode = useMemo(() => new Map(risks.map((r) => [r.code, r])), [risks])
   const hlSet = useMemo(() => new Set(highlightCodes ?? []), [highlightCodes])
+  const markSet = useMemo(() => new Set((marks ?? []).map((m) => m.code)), [marks])
 
-  // 每縣市面注入熱度色 _color（依當前維度）與事件高亮旗標 _hl
+  // 每縣市面注入熱度色 _color（依當前維度）、事件高亮旗標 _hl、事件縣市旗標 _evt
   const fillGeo = useMemo(() => {
     if (!geo) return null
     return {
       ...geo,
       features: geo.features.map((f: any) => {
-        const r = byCode.get(f.properties.COUNTYCODE)
+        const code = f.properties.COUNTYCODE
+        const r = byCode.get(code)
         const noData = !r || r.score === null
         return {
           ...f,
           properties: {
             ...f.properties,
             _color: noData ? NO_DATA_COLOR : scoreColor(valueFor(r!, colorBy)),
-            _hl: hlSet.has(f.properties.COUNTYCODE) ? 1 : 0,
+            _hl: hlSet.has(code) ? 1 : 0,
+            _evt: markSet.has(code) ? 1 : 0,
           },
         }
       }),
     }
-  }, [geo, byCode, colorBy, hlSet])
+  }, [geo, byCode, colorBy, hlSet, markSet])
 
   useEffect(() => {
     if (!geo || !mapRef.current) return
@@ -75,11 +94,14 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes
         mapStyle={STYLE as any}
         initialViewState={{ longitude: 120.7, latitude: 23.8, zoom: 6.6 }}
         minZoom={6}
-        maxZoom={9.5}
+        maxZoom={10.5}
         dragRotate={false}
         touchPitch={false}
         pitchWithRotate={false}
         interactiveLayerIds={['county-fill']}
+        onZoomEnd={(e) => {
+          if (e.viewState.zoom >= 7.8) setZoomedIn(true)
+        }}
         onClick={(e) => {
           const code = e.features?.[0]?.properties?.COUNTYCODE
           if (code) onSelect(code)
@@ -93,15 +115,22 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes
               type="fill"
               paint={{ 'fill-color': ['get', '_color'], 'fill-opacity': 0.95 }}
             />
-            {/* 縣市間紙色細縫：像印刷拼貼，乾淨 */}
+            {/* 行政區界：總覽時是紙色細縫；拉近後漸變為清楚的墨線，看得出各行政區 */}
             <Layer
               id="county-line"
               type="line"
               paint={{
-                'line-color': ['case', ['==', ['get', 'COUNTYCODE'], sel], '#3a2a1e', PAPER],
-                'line-width': ['case', ['==', ['get', 'COUNTYCODE'], sel], 1.6, 0.8],
-                'line-opacity': ['case', ['==', ['get', 'COUNTYCODE'], sel], 1, 0.7],
+                'line-color': ['interpolate', ['linear'], ['zoom'], 7, PAPER, 8.5, '#7a6850'],
+                'line-width': ['interpolate', ['linear'], ['zoom'], 7, 0.8, 9.5, 1.5],
+                'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.6, 8.5, 0.95],
               }}
+            />
+            {/* 事件縣市：青色細實線輪廓（勾選的事件圖層中有事件的縣市） */}
+            <Layer
+              id="county-event"
+              type="line"
+              filter={['==', ['get', '_evt'], 1]}
+              paint={{ 'line-color': '#13556b', 'line-width': 1.3, 'line-opacity': 0.85 }}
             />
             {/* 點選事件 → 其縣市青色虛線高亮 */}
             <Layer
@@ -109,6 +138,41 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes
               type="line"
               filter={['==', ['get', '_hl'], 1]}
               paint={{ 'line-color': '#13556b', 'line-width': 2.5, 'line-dasharray': [2, 1.5], 'line-opacity': 1 }}
+            />
+            {/* 選中縣市：紙色襯底 + 墨線（cased outline）。注意必須是 Source 的「直接」子層，
+                包進 Fragment 會讓 react-map-gl 無法注入 source → 圖層加不上去。 */}
+            {sel && (
+              <Layer
+                id="county-sel-casing"
+                source="counties"
+                type="line"
+                filter={['==', ['get', 'COUNTYCODE'], sel]}
+                paint={{ 'line-color': PAPER, 'line-width': 4, 'line-opacity': 0.9 }}
+              />
+            )}
+            {sel && (
+              <Layer
+                id="county-sel"
+                source="counties"
+                type="line"
+                filter={['==', ['get', 'COUNTYCODE'], sel]}
+                paint={{ 'line-color': '#3a2a1e', 'line-width': 2, 'line-opacity': 1 }}
+              />
+            )}
+          </Source>
+        )}
+        {/* 鄉鎮市區界線：拉近後才淡入（縣市界仍較粗、層級分明） */}
+        {towns && (
+          <Source id="towns" type="geojson" data={towns}>
+            <Layer
+              id="town-line"
+              type="line"
+              beforeId="county-line"
+              paint={{
+                'line-color': '#6f5a40',
+                'line-width': ['interpolate', ['linear'], ['zoom'], 8.5, 0.5, 10.5, 0.9],
+                'line-opacity': ['interpolate', ['linear'], ['zoom'], 8.3, 0, 9.5, 0.5, 10.5, 0.7],
+              }}
             />
           </Source>
         )}

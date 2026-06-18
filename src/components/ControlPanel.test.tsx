@@ -27,34 +27,30 @@ const noData: CountyRisk = {
 }
 
 function renderPanel(props: Partial<React.ComponentProps<typeof ControlPanel>> = {}) {
-  const onColorBy = vi.fn()
   const onSelect = vi.fn()
   render(
     <ControlPanel
       risks={[scored, noData]}
       colorBy="composite"
-      onColorBy={onColorBy}
       selectedCode={null}
       onSelect={onSelect}
       {...props}
     />,
   )
-  return { onColorBy, onSelect }
+  return { onSelect }
 }
 
 describe('ControlPanel', () => {
-  it('renders all 6 metric options and a ranking row per county', () => {
+  it('renders a ranking row per county', () => {
     renderPanel()
-    for (const label of ['綜合', '經濟壓力', '居住壓力', '人口壓力', '治安', '醫療資源']) {
-      expect(screen.getByRole('button', { name: label })).toBeInTheDocument()
-    }
     expect(screen.getByText('臺北市')).toBeInTheDocument()
     expect(screen.getByText('高雄市')).toBeInTheDocument()
   })
 
   it('shows — for a county with null score and sorts it after scored ones', () => {
     renderPanel()
-    const items = screen.getAllByRole('listitem')
+    const ranking = screen.getByRole('list', { name: '縣市排行' })
+    const items = within(ranking).getAllByRole('listitem')
     // scored 臺北市 first, null-score 高雄市 last
     expect(within(items[0]).getByText('臺北市')).toBeInTheDocument()
     expect(within(items[1]).getByText('高雄市')).toBeInTheDocument()
@@ -67,11 +63,5 @@ describe('ControlPanel', () => {
     const { onSelect } = renderPanel()
     fireEvent.click(screen.getByText('臺北市'))
     expect(onSelect).toHaveBeenCalledWith('63000')
-  })
-
-  it('calls onColorBy when a metric chip is clicked', () => {
-    const { onColorBy } = renderPanel()
-    fireEvent.click(screen.getByRole('button', { name: '居住壓力' }))
-    expect(onColorBy).toHaveBeenCalledWith('housing')
   })
 })

@@ -21,15 +21,15 @@ export function Legend() {
       <div className="flex flex-col gap-1.5 text-[11px] text-[var(--color-ink-2)]">
         <div className="flex items-center gap-2">
           <svg width="22" height="14" viewBox="0 0 22 14" className="shrink-0">
-            <circle cx="11" cy="7" r="6" fill="#1f6f8b" fillOpacity="0.25" stroke="#1f6f8b" strokeWidth="1.5" />
+            <rect x="2" y="2.5" width="18" height="9" rx="1.5" fill="none" stroke="#13556b" strokeWidth="1.4" />
           </svg>
-          <span>地震（圈愈大規模愈大；標記 M＝規模）</span>
+          <span>事件縣市（青色細框）</span>
         </div>
         <div className="flex items-center gap-2">
           <svg width="22" height="14" viewBox="0 0 22 14" className="shrink-0">
-            <line x1="1" y1="7" x2="21" y2="7" stroke="#1f6f8b" strokeWidth="2" strokeDasharray="4 3" />
+            <line x1="1" y1="7" x2="21" y2="7" stroke="#13556b" strokeWidth="2" strokeDasharray="4 3" />
           </svg>
-          <span>嚴重告警縣市</span>
+          <span>點選事件高亮的縣市</span>
         </div>
       </div>
     </div>

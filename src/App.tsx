@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MapView } from '@/components/MapView'
 import { ControlPanel } from '@/components/ControlPanel'
+import { LayerControl } from '@/components/LayerControl'
 import { CountyDrawer } from '@/components/CountyDrawer'
 import { Legend } from '@/components/Legend'
 import { DataSources } from '@/components/DataSources'
@@ -12,8 +13,12 @@ import { useDisasterEvents } from '@/hooks/useDisasterEvents'
 import { useIncidents } from '@/hooks/useIncidents'
 import { eventsByCounty } from '@/lib/disasters/group'
 import type { MetricKey } from '@/lib/types'
+import type { DisasterType, Severity } from '@/lib/disasters/types'
 
 type ColorBy = 'composite' | MetricKey
+
+const ALL_LAYERS: DisasterType[] = ['incident', 'alert', 'weather', 'earthquake']
+const SEV_RANK: Record<Severity, number> = { severe: 0, warning: 1, info: 2 }
 
 export default function App() {
   const { t } = useTranslation()
@@ -25,6 +30,7 @@ export default function App() {
   const [selectedCode, setSelectedCode] = useState<string | null>(null)
   const [panelOpen, setPanelOpen] = useState(false)
   const [highlight, setHighlight] = useState<{ id: string; codes: string[] } | null>(null)
+  const [layers, setLayers] = useState<Set<DisasterType>>(() => new Set(ALL_LAYERS))
 
   const risks = data?.risks
   const allLive = data ? data.sources.every((s) => s.status === 'live') : false
@@ -33,6 +39,32 @@ export default function App() {
     [risks, selectedCode],
   )
   const byCounty = useMemo(() => eventsByCounty(allEvents), [allEvents])
+
+  // 依勾選的事件圖層過濾，供清單顯示與地圖標點共用
+  const visibleEvents = useMemo(
+    () => allEvents.filter((e) => layers.has(e.type)),
+    [allEvents, layers],
+  )
+  const toggleLayer = (t: DisasterType) =>
+    setLayers((prev) => {
+      const next = new Set(prev)
+      next.has(t) ? next.delete(t) : next.add(t)
+      return next
+    })
+
+  // 受影響縣市的事件圓點：顏色取最嚴重、大小依事件數
+  const marks = useMemo(() => {
+    const m = new Map<string, { severity: Severity; count: number }>()
+    for (const e of visibleEvents) {
+      for (const code of e.countyCodes) {
+        const cur = m.get(code)
+        const severity =
+          !cur || SEV_RANK[e.severity] < SEV_RANK[cur.severity] ? e.severity : cur.severity
+        m.set(code, { severity, count: (cur?.count ?? 0) + 1 })
+      }
+    }
+    return [...m.entries()].map(([code, v]) => ({ code, ...v }))
+  }, [visibleEvents])
 
   return (
     <div className="h-full flex flex-col bg-[var(--color-paper)]">
@@ -100,7 +132,6 @@ export default function App() {
                 <ControlPanel
                   risks={risks}
                   colorBy={colorBy}
-                  onColorBy={setColorBy}
                   selectedCode={selectedCode}
                   onSelect={(code) => {
                     setSelectedCode(code)
@@ -108,7 +139,7 @@ export default function App() {
                   }}
                 />
                 <AlertsList
-                  events={allEvents}
+                  events={visibleEvents}
                   activeId={highlight?.id ?? null}
                   onSelectEvent={(ev) =>
                     setHighlight((h) => (h?.id === ev.id ? null : { id: ev.id, codes: ev.countyCodes }))
@@ -125,6 +156,14 @@ export default function App() {
                 selectedCode={selectedCode}
                 onSelect={setSelectedCode}
                 highlightCodes={highlight?.codes ?? []}
+                marks={marks}
+              />
+              <LayerControl
+                colorBy={colorBy}
+                onColorBy={setColorBy}
+                events={allEvents}
+                layers={layers}
+                onToggleLayer={toggleLayer}
               />
               <Legend />
               <CountyDrawer

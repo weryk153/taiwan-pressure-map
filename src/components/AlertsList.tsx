@@ -41,7 +41,7 @@ export function AlertsList({ events, activeId, onSelectEvent }: Props) {
                 <span className="mt-[5px] w-1.5 h-1.5 rounded-full shrink-0" style={{ background: SEV_COLOR[e.severity] }} />
                 <div className="min-w-0">
                   <div className={`truncate ${activeId === e.id ? 'text-[#1a5566] font-medium' : 'text-[var(--color-ink)]'}`}>
-                    {e.type === 'incident' && <span className="text-[var(--color-ink-2)]">[新聞] </span>}
+                    {e.type === 'incident' && <span className="text-[var(--color-ink-2)]">[重大新聞] </span>}
                     {e.title}
                   </div>
                   <div className="text-[11px] text-[var(--color-ink-2)] truncate">{regionText(e.countyCodes)}</div>

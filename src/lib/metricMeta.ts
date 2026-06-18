@@ -4,7 +4,7 @@ import type { MetricKey } from './types'
 export const SOURCE_LABEL: Record<string, string> = {
   CWA: '中央氣象署',
   NCDR: '災防告警',
-  NEWS: '新聞',
+  NEWS: '重大新聞',
 }
 
 /** 子指標的「原始真實值」標籤（與壓力框架 metrics.* 不同：這是具體統計名）。 */
