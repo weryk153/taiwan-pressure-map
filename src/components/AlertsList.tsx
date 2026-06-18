@@ -21,15 +21,20 @@ interface Props {
 
 export function AlertsList({ events, activeId, onSelectEvent }: Props) {
   const { t } = useTranslation()
-  const top = sortBySeverity(events).slice(0, 5)
+  const sorted = sortBySeverity(events)
   return (
     <div className="border-t border-[var(--color-ink)]/15 px-6 py-4 bg-[var(--color-paper)]">
-      <div className="kicker mb-2.5">{t('events.title')}</div>
-      {top.length === 0 ? (
+      <div className="kicker mb-2.5 flex items-center">
+        <span>{t('events.title')}</span>
+        {sorted.length > 0 && (
+          <span className="ml-auto font-display text-[var(--color-ink-2)]/70 tabular-nums normal-case tracking-normal">{sorted.length}</span>
+        )}
+      </div>
+      {sorted.length === 0 ? (
         <p className="text-[12px] text-[var(--color-ink-2)]">{t('events.none')}</p>
       ) : (
-        <ul className="flex flex-col gap-1.5">
-          {top.map((e) => (
+        <ul className="flex flex-col gap-1.5 max-h-72 overflow-y-auto -mr-2 pr-2">
+          {sorted.map((e) => (
             <li key={e.id}>
               <button
                 onClick={() => onSelectEvent?.(e)}

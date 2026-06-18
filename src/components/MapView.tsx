@@ -132,12 +132,18 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes
               filter={['==', ['get', '_evt'], 1]}
               paint={{ 'line-color': '#13556b', 'line-width': 1.3, 'line-opacity': 0.85 }}
             />
-            {/* 點選事件 → 其縣市青色虛線高亮 */}
+            {/* 點選事件 → 其縣市紅色虛線高亮（與事件縣市青框冷暖對比）。先鋪紙色襯底，深色縣市上也清楚 */}
+            <Layer
+              id="county-highlight-casing"
+              type="line"
+              filter={['==', ['get', '_hl'], 1]}
+              paint={{ 'line-color': PAPER, 'line-width': 4.5, 'line-opacity': 0.7 }}
+            />
             <Layer
               id="county-highlight"
               type="line"
               filter={['==', ['get', '_hl'], 1]}
-              paint={{ 'line-color': '#13556b', 'line-width': 2.5, 'line-dasharray': [2, 1.5], 'line-opacity': 1 }}
+              paint={{ 'line-color': '#a8322b', 'line-width': 2.5, 'line-dasharray': [2, 1.5], 'line-opacity': 1 }}
             />
             {/* 選中縣市：紙色襯底 + 墨線（cased outline）。注意必須是 Source 的「直接」子層，
                 包進 Fragment 會讓 react-map-gl 無法注入 source → 圖層加不上去。 */}

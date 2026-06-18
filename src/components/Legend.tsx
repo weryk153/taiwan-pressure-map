@@ -27,7 +27,7 @@ export function Legend() {
         </div>
         <div className="flex items-center gap-2">
           <svg width="22" height="14" viewBox="0 0 22 14" className="shrink-0">
-            <line x1="1" y1="7" x2="21" y2="7" stroke="#13556b" strokeWidth="2" strokeDasharray="4 3" />
+            <line x1="1" y1="7" x2="21" y2="7" stroke="#a8322b" strokeWidth="2" strokeDasharray="4 3" />
           </svg>
           <span>點選事件高亮的縣市</span>
         </div>
