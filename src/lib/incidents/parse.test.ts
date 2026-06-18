@@ -31,8 +31,8 @@ describe('itemsToIncidents', () => {
     expect(e.source).toBe('NEWS')
     expect(e.url).toContain('news.google.com')
   })
-  it('近 48h 過濾：過舊丟棄', () => {
-    const old = itemsToIncidents(items, FIRE, Date.parse('2026-06-25T00:00:00Z'))
+  it('近 7 天過濾：過舊丟棄', () => {
+    const old = itemsToIncidents(items, FIRE, Date.parse('2026-06-30T00:00:00Z'))
     expect(old).toHaveLength(0)
   })
 })

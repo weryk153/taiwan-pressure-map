@@ -36,7 +36,9 @@ export function parseRssItems(xml: string): RssItem[] {
 }
 
 const DAY = 86_400_000
-const WINDOW = 2 * DAY
+// 近 7 天：Google News「搜尋」RSS 依相關度回傳跨數週結果、且多數標題未含縣市；
+// 48h 幾乎為空，7 天是「近期人禍」的務實窗口（實測校正）。
+const WINDOW = 7 * DAY
 
 export function stripSourceSuffix(title: string): string {
   return title.replace(/\s+[-–—]\s+[^-–—]+$/, '').trim()
