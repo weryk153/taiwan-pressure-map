@@ -5,7 +5,7 @@ import { toRiskLevel } from '@/lib/score'
 import { METRIC_KEYS, type CountyRisk, type PressurePeriod } from '@/lib/types'
 import type { DisasterEvent } from '@/lib/disasters/types'
 import { formatTaipei } from '@/lib/disasters/time'
-import { RAW_LABEL, formatRaw } from '@/lib/metricMeta'
+import { RAW_LABEL, formatRaw, SOURCE_LABEL } from '@/lib/metricMeta'
 
 const SEV_COLOR: Record<string, string> = { severe: '#a8322b', warning: '#b5732f', info: '#6f6657' }
 
@@ -166,7 +166,9 @@ export function CountyDrawer({ risk, onClose, events, history }: Props) {
                   )}
                 </div>
                 <div className="text-[11px] text-[var(--color-ink-2)] font-display">
-                  {(e.source === 'NEWS' && (e.raw as any)?.source) ? (e.raw as any).source : e.source} · {formatTaipei(e.time)}
+                  {e.source === 'NEWS'
+                    ? ((e.raw as any)?.source ?? SOURCE_LABEL.NEWS)
+                    : (SOURCE_LABEL[e.source] ?? e.source)} · {formatTaipei(e.time)}
                 </div>
               </div>
             </li>

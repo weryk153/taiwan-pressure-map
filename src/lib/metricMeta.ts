@@ -1,5 +1,12 @@
 import type { MetricKey } from './types'
 
+/** 事件來源代號 → 中文（CWA/NCDR 等英文代號避免直接露出）。NEWS 另顯示媒體名。 */
+export const SOURCE_LABEL: Record<string, string> = {
+  CWA: '中央氣象署',
+  NCDR: '災防告警',
+  NEWS: '新聞',
+}
+
 /** 子指標的「原始真實值」標籤（與壓力框架 metrics.* 不同：這是具體統計名）。 */
 export const RAW_LABEL: Record<MetricKey, string> = {
   economic: '失業率',

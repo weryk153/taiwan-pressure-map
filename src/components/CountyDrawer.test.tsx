@@ -87,6 +87,9 @@ describe('CountyDrawer', () => {
     // plain (no url) event is not a link
     expect(screen.getByText('無連結警示')).toBeInTheDocument()
     expect(screen.queryByRole('link', { name: '無連結警示' })).not.toBeInTheDocument()
+    // 來源代號顯示中文（CWA → 中央氣象署），不露英文代號
+    expect(screen.getByText(/中央氣象署/)).toBeInTheDocument()
+    expect(screen.queryByText(/CWA/)).not.toBeInTheDocument()
   })
 
   it('shows the no-events empty state when events are empty', () => {

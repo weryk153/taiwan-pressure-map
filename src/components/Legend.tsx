@@ -23,7 +23,7 @@ export function Legend() {
           <svg width="22" height="14" viewBox="0 0 22 14" className="shrink-0">
             <circle cx="11" cy="7" r="6" fill="#1f6f8b" fillOpacity="0.25" stroke="#1f6f8b" strokeWidth="1.5" />
           </svg>
-          <span>地震（圈大小＝規模）</span>
+          <span>地震（圈愈大規模愈大；標記 M＝規模）</span>
         </div>
         <div className="flex items-center gap-2">
           <svg width="22" height="14" viewBox="0 0 22 14" className="shrink-0">

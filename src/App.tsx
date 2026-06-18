@@ -6,6 +6,7 @@ import { CountyDrawer } from '@/components/CountyDrawer'
 import { Legend } from '@/components/Legend'
 import { DataSources } from '@/components/DataSources'
 import { AlertsList } from '@/components/AlertsList'
+import { Methodology } from '@/components/Methodology'
 import { useRiskData } from '@/hooks/useRiskData'
 import { useDisasterEvents } from '@/hooks/useDisasterEvents'
 import { useIncidents } from '@/hooks/useIncidents'
@@ -109,6 +110,7 @@ export default function App() {
               </div>
               <AlertsList events={allEvents} showEvents={showEvents} onToggle={() => setShowEvents((v) => !v)} />
               <DataSources sources={data.sources} builtAt={data.builtAt} />
+              <Methodology />
             </div>
             <div className="flex-1 relative">
               <MapView
