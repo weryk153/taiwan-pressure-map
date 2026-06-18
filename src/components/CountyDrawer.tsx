@@ -97,8 +97,23 @@ export function CountyDrawer({ risk, onClose, events }: Props) {
             <li key={e.id} className="flex items-start gap-2 text-sm">
               <span className="mt-1 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: SEV_COLOR[e.severity] }} />
               <div>
-                <div className="text-[var(--color-ink)]">{e.title}</div>
-                <div className="text-[11px] text-[var(--color-ink-2)] font-display">{e.source} · {e.time?.slice(5, 16).replace('T', ' ')}</div>
+                <div>
+                  {e.url ? (
+                    <a
+                      href={e.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[var(--color-ink)] underline decoration-[var(--color-ink-2)]/40 hover:decoration-[var(--color-accent)] hover:text-[var(--color-accent)] transition"
+                    >
+                      {e.title}
+                    </a>
+                  ) : (
+                    <span className="text-[var(--color-ink)]">{e.title}</span>
+                  )}
+                </div>
+                <div className="text-[11px] text-[var(--color-ink-2)] font-display">
+                  {(e.source === 'NEWS' && (e.raw as any)?.source) ? (e.raw as any).source : e.source} · {e.time?.slice(5, 16).replace('T', ' ')}
+                </div>
               </div>
             </li>
           ))}

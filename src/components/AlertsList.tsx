@@ -31,7 +31,10 @@ export function AlertsList({ events, showEvents, onToggle }: Props) {
           {top.map((e) => (
             <li key={e.id} className="flex items-center gap-2 text-[12px]">
               <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: SEV_COLOR[e.severity] }} />
-              <span className="flex-1 text-[var(--color-ink)] truncate">{e.title}</span>
+              <span className="flex-1 text-[var(--color-ink)] truncate">
+                {e.type === 'incident' && <span className="text-[var(--color-ink-2)]">[新聞] </span>}
+                {e.title}
+              </span>
               <span className="text-[var(--color-ink-2)] font-display">{e.countyCodes.length}</span>
             </li>
           ))}
