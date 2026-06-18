@@ -107,10 +107,10 @@ export default function App() {
                     setPanelOpen(false)
                   }}
                 />
+                <AlertsList events={allEvents} showEvents={showEvents} onToggle={() => setShowEvents((v) => !v)} />
+                <DataSources sources={data.sources} builtAt={data.builtAt} />
+                <Methodology />
               </div>
-              <AlertsList events={allEvents} showEvents={showEvents} onToggle={() => setShowEvents((v) => !v)} />
-              <DataSources sources={data.sources} builtAt={data.builtAt} />
-              <Methodology />
             </div>
             <div className="flex-1 relative">
               <MapView
