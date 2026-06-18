@@ -1,4 +1,5 @@
 import { COUNTIES, findCountyByName, normalizeCountyName } from '@/lib/counties'
+import { parseTaiwanTime } from './time'
 import type { DisasterEvent, Severity } from './types'
 
 const codeOf = (name: string): string | undefined => findCountyByName(name?.trim())?.code
@@ -53,7 +54,7 @@ export function parseEarthquakes(json: any, nowMs: number = Date.now()): Disaste
       }
     })
     .filter((e) => {
-      const t = Date.parse(e.time)
+      const t = parseTaiwanTime(e.time)
       return Number.isNaN(t) ? true : nowMs - t <= EQ_WINDOW_DAYS * DAY
     })
 }
@@ -69,8 +70,8 @@ export function parseWeatherAlerts(json: any, nowMs: number = Date.now()): Disas
     if (!code) continue
     const hazards: any[] = loc.hazardConditions?.hazards ?? []
     for (const h of hazards) {
-      const end = Date.parse((h.validTime?.endTime ?? '').replace(' ', 'T'))
-      if (!Number.isNaN(end) && end < nowMs) continue // 已過期
+      const end = parseTaiwanTime(h.validTime?.endTime ?? '')
+      if (!Number.isNaN(end) && end < nowMs) continue // 已過期（無時區則視為台灣時間）
       const phenom = h.info?.phenomena ?? '特報'
       const severity: Severity = SEVERE_WX.includes(phenom) ? 'severe' : WARNING_WX.includes(phenom) ? 'warning' : 'info'
       const start = (h.validTime?.startTime ?? '').replace(' ', 'T')
