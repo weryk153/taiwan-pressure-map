@@ -25,6 +25,7 @@ export default function App() {
   const [selectedCode, setSelectedCode] = useState<string | null>(null)
   const [showEvents, setShowEvents] = useState(true)
   const [panelOpen, setPanelOpen] = useState(false)
+  const [highlight, setHighlight] = useState<{ id: string; codes: string[] } | null>(null)
 
   const risks = data?.risks
   const allLive = data ? data.sources.every((s) => s.status === 'live') : false
@@ -107,7 +108,15 @@ export default function App() {
                     setPanelOpen(false)
                   }}
                 />
-                <AlertsList events={allEvents} showEvents={showEvents} onToggle={() => setShowEvents((v) => !v)} />
+                <AlertsList
+                  events={allEvents}
+                  showEvents={showEvents}
+                  onToggle={() => setShowEvents((v) => !v)}
+                  activeId={highlight?.id ?? null}
+                  onSelectEvent={(ev) =>
+                    setHighlight((h) => (h?.id === ev.id ? null : { id: ev.id, codes: ev.countyCodes }))
+                  }
+                />
                 <DataSources sources={data.sources} builtAt={data.builtAt} />
                 <Methodology />
               </div>
@@ -120,6 +129,7 @@ export default function App() {
                 onSelect={setSelectedCode}
                 events={allEvents}
                 showEvents={showEvents}
+                highlightCodes={highlight?.codes ?? []}
               />
               <Legend />
               <CountyDrawer

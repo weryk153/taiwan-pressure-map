@@ -17,9 +17,11 @@ interface Props {
   events: DisasterEvent[]
   showEvents: boolean
   onToggle: () => void
+  activeId?: string | null
+  onSelectEvent?: (e: DisasterEvent) => void
 }
 
-export function AlertsList({ events, showEvents, onToggle }: Props) {
+export function AlertsList({ events, showEvents, onToggle, activeId, onSelectEvent }: Props) {
   const { t } = useTranslation()
   const top = sortBySeverity(events).slice(0, 5)
   return (
@@ -38,15 +40,23 @@ export function AlertsList({ events, showEvents, onToggle }: Props) {
       ) : (
         <ul className="flex flex-col gap-1.5">
           {top.map((e) => (
-            <li key={e.id} className="flex items-start gap-2 text-[12px]">
-              <span className="mt-[5px] w-1.5 h-1.5 rounded-full shrink-0" style={{ background: SEV_COLOR[e.severity] }} />
-              <div className="min-w-0">
-                <div className="text-[var(--color-ink)] truncate">
-                  {e.type === 'incident' && <span className="text-[var(--color-ink-2)]">[新聞] </span>}
-                  {e.title}
+            <li key={e.id}>
+              <button
+                onClick={() => onSelectEvent?.(e)}
+                className={`group w-full flex items-start gap-2 text-[12px] text-left rounded-sm px-1 -mx-1 py-0.5 transition ${
+                  activeId === e.id ? 'bg-[#1f6f8b]/12' : 'hover:bg-[var(--color-ink)]/[0.04]'
+                }`}
+                title="在地圖上高亮此事件影響的縣市"
+              >
+                <span className="mt-[5px] w-1.5 h-1.5 rounded-full shrink-0" style={{ background: SEV_COLOR[e.severity] }} />
+                <div className="min-w-0">
+                  <div className={`truncate ${activeId === e.id ? 'text-[#1a5566] font-medium' : 'text-[var(--color-ink)]'}`}>
+                    {e.type === 'incident' && <span className="text-[var(--color-ink-2)]">[新聞] </span>}
+                    {e.title}
+                  </div>
+                  <div className="text-[11px] text-[var(--color-ink-2)] truncate">{regionText(e.countyCodes)}</div>
                 </div>
-                <div className="text-[11px] text-[var(--color-ink-2)] truncate">{regionText(e.countyCodes)}</div>
-              </div>
+              </button>
             </li>
           ))}
         </ul>

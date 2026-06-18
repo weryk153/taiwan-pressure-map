@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import MapGL, { Source, Layer, type MapRef } from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import bbox from '@turf/bbox'
-import { scoreColor, NO_DATA_COLOR } from '@/lib/colors'
+import { scoreColor } from '@/lib/colors'
 import { computeCentroids } from '@/lib/centroids'
 import type { CountyRisk, MetricKey } from '@/lib/types'
 import type { DisasterEvent } from '@/lib/disasters/types'
@@ -14,13 +14,10 @@ function valueFor(r: CountyRisk, colorBy: ColorBy): number {
   return r.subScores[colorBy] ?? 0
 }
 
-// 紙上地圖：海＝紙底（融入頁面，如印刷圖），縣市面鋪熱度色。
-const STYLE = {
-  version: 8 as const,
-  glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
-  sources: {},
-  layers: [{ id: 'bg', type: 'background' as const, paint: { 'background-color': '#f4efe4' } }],
-}
+// 真實向量底圖（OpenFreeMap positron，免費免 key）：真海岸線/水域/中文地名 → 質感。
+// 縣市界、壓力圓泡、事件高亮疊在其上。
+const MAP_STYLE = 'https://tiles.openfreemap.org/styles/positron'
+const MAP_FONT = 'Noto Sans Regular' // positron glyphs 內含
 
 interface Props {
   risks: CountyRisk[]
@@ -29,17 +26,16 @@ interface Props {
   onSelect: (code: string) => void
   events?: DisasterEvent[]
   showEvents?: boolean
+  highlightCodes?: string[] // 點選某事件時，高亮它影響的縣市
 }
 
-export function MapView({ risks, colorBy, selectedCode, onSelect, events, showEvents }: Props) {
+export function MapView({ risks, colorBy, selectedCode, onSelect, events, showEvents, highlightCodes }: Props) {
   const mapRef = useRef<MapRef>(null)
   const [geo, setGeo] = useState<any>(null)
 
   useEffect(() => {
     fetch('/taiwan-counties.json').then((r) => r.json()).then(setGeo)
   }, [])
-
-  const byCode = useMemo(() => new Map(risks.map((r) => [r.code, r])), [risks])
 
   const quakeGeo = useMemo(() => {
     const eqs = (events ?? []).filter((e) => e.type === 'earthquake' && e.lat != null && e.lon != null)
@@ -53,35 +49,22 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, events, showEv
     }
   }, [events])
 
-  const alertedCodes = useMemo(() => {
-    const s = new Set<string>()
-    // 只描邊「嚴重」等級的縣市；常見且全台廣布的告警（強風/雷雨/高溫）改由 drawer/警示清單呈現，避免淹沒地圖
-    for (const e of events ?? []) {
-      if (e.type !== 'earthquake' && e.severity === 'severe') e.countyCodes.forEach((c) => s.add(c))
-    }
-    return s
-  }, [events])
+  const hlSet = useMemo(() => new Set(highlightCodes ?? []), [highlightCodes])
 
-  // 每縣市面注入熱度色
+  // 每縣市面注入高亮旗標（點選事件時其影響縣市）
   const fillGeo = useMemo(() => {
     if (!geo) return null
     return {
       ...geo,
-      features: geo.features.map((f: any) => {
-        const r = byCode.get(f.properties.COUNTYCODE)
-        const noData = !r || r.score === null
-        const v = !noData ? valueFor(r!, colorBy) : 0
-        return {
-          ...f,
-          properties: {
-            ...f.properties,
-            _color: noData ? NO_DATA_COLOR : scoreColor(v),
-            _alerted: alertedCodes.has(f.properties.COUNTYCODE) ? 1 : 0,
-          },
-        }
-      }),
+      features: geo.features.map((f: any) => ({
+        ...f,
+        properties: {
+          ...f.properties,
+          _hl: hlSet.has(f.properties.COUNTYCODE) ? 1 : 0,
+        },
+      })),
     }
-  }, [geo, byCode, colorBy, alertedCodes])
+  }, [geo, hlSet])
 
   useEffect(() => {
     if (!geo || !mapRef.current) return
@@ -114,7 +97,7 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, events, showEv
     <div className="absolute inset-0">
       <MapGL
         ref={mapRef}
-        mapStyle={STYLE as any}
+        mapStyle={MAP_STYLE}
         initialViewState={{ longitude: 120.7, latitude: 23.8, zoom: 6.6 }}
         minZoom={6}
         maxZoom={9.5}
@@ -135,9 +118,9 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, events, showEv
               id="county-fill"
               type="fill"
               paint={{
-                // 中性陸地（讓壓力圓泡跳出來，不與圓泡重複編碼顏色）
-                'fill-color': ['case', ['==', ['get', 'COUNTYCODE'], sel], '#ded3bf', '#e9e2d3'],
-                'fill-opacity': 1,
+                // 底圖已顯示陸地，縣市面平時透明；點選事件時其縣市青色高亮
+                'fill-color': '#1f6f8b',
+                'fill-opacity': ['case', ['==', ['get', '_hl'], 1], 0.22, 0],
               }}
             />
             <Layer
@@ -150,10 +133,10 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, events, showEv
               }}
             />
             <Layer
-              id="county-alert"
+              id="county-highlight"
               type="line"
-              filter={showEvents === false ? ['==', ['get', 'COUNTYCODE'], '__none__'] : ['==', ['get', '_alerted'], 1]}
-              paint={{ 'line-color': '#1f6f8b', 'line-width': 2, 'line-dasharray': [2, 1.5], 'line-opacity': 0.9 }}
+              filter={['==', ['get', '_hl'], 1]}
+              paint={{ 'line-color': '#1f6f8b', 'line-width': 2.5, 'line-dasharray': [2, 1.5], 'line-opacity': 1 }}
             />
           </Source>
         )}
@@ -176,7 +159,7 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, events, showEv
               type="symbol"
               layout={{
                 'text-field': ['get', 'label'],
-                'text-font': ['Open Sans Semibold'],
+                'text-font': [MAP_FONT],
                 'text-size': 12,
                 'text-allow-overlap': true,
                 'text-ignore-placement': true,
@@ -206,7 +189,7 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, events, showEv
             <Layer
               id="quake-label"
               type="symbol"
-              layout={{ 'text-field': ['get', 'label'], 'text-font': ['Open Sans Semibold'], 'text-size': 11, 'text-allow-overlap': true }}
+              layout={{ 'text-field': ['get', 'label'], 'text-font': [MAP_FONT], 'text-size': 11, 'text-allow-overlap': true }}
               paint={{ 'text-color': '#10394a', 'text-halo-color': '#f4efe4', 'text-halo-width': 1.4 }}
             />
           </Source>
