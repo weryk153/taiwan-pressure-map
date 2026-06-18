@@ -6,7 +6,7 @@ const cors = {
 }
 
 const CWA = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore'
-// NCDR 災防告警公開資料（CAP/ATOM）。實際端點/格式於真實驗證時確認。
+// NCDR 災防告警公開資料（免 key）。ATOM-JSON：{ entry: [{ title, summary, category, ... }] }。
 const NCDR_URL = 'https://alerts.ncdr.nat.gov.tw/JSONATOMFEED.ashx'
 
 let cache: { at: number; body: string } | null = null
@@ -65,6 +65,8 @@ Deno.serve(async (req) => {
     },
   }
   const text = JSON.stringify(body)
-  cache = { at: Date.now(), body: text }
+  // 只在三來源皆成功時才快取，避免把暫時性失敗（如 CWA 故障）的降級結果快取 5 分鐘
+  const allOk = body.sources.eq === 'ok' && body.sources.weather === 'ok' && body.sources.cap === 'ok'
+  if (allOk) cache = { at: Date.now(), body: text }
   return new Response(text, { headers: { ...cors, 'Content-Type': 'application/json' } })
 })
