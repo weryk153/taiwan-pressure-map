@@ -23,7 +23,6 @@ export default function App() {
   const allEvents = useMemo(() => [...events, ...incidents], [events, incidents])
   const [colorBy, setColorBy] = useState<ColorBy>('composite')
   const [selectedCode, setSelectedCode] = useState<string | null>(null)
-  const [showEvents, setShowEvents] = useState(true)
   const [panelOpen, setPanelOpen] = useState(false)
   const [highlight, setHighlight] = useState<{ id: string; codes: string[] } | null>(null)
 
@@ -97,7 +96,7 @@ export default function App() {
               >
                 ✕
               </button>
-              <div className="flex-1 overflow-y-auto">
+              <div className="flex-1 min-h-0 overflow-y-auto">
                 <ControlPanel
                   risks={risks}
                   colorBy={colorBy}
@@ -110,8 +109,6 @@ export default function App() {
                 />
                 <AlertsList
                   events={allEvents}
-                  showEvents={showEvents}
-                  onToggle={() => setShowEvents((v) => !v)}
                   activeId={highlight?.id ?? null}
                   onSelectEvent={(ev) =>
                     setHighlight((h) => (h?.id === ev.id ? null : { id: ev.id, codes: ev.countyCodes }))
@@ -127,8 +124,6 @@ export default function App() {
                 colorBy={colorBy}
                 selectedCode={selectedCode}
                 onSelect={setSelectedCode}
-                events={allEvents}
-                showEvents={showEvents}
                 highlightCodes={highlight?.codes ?? []}
               />
               <Legend />

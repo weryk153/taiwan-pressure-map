@@ -16,20 +16,21 @@ const incident: DisasterEvent = {
 
 describe('AlertsList', () => {
   it('shows the empty state when there are no events', () => {
-    render(<AlertsList events={[]} showEvents={false} onToggle={() => {}} />)
+    render(<AlertsList events={[]} />)
     expect(screen.getByText('目前無警示')).toBeInTheDocument()
   })
 
-  it('prefixes an incident row with [新聞]', () => {
-    render(<AlertsList events={[incident]} showEvents={false} onToggle={() => {}} />)
+  it('prefixes an incident row with [新聞] 並標注區域', () => {
+    render(<AlertsList events={[incident]} />)
     expect(screen.getByText('[新聞]')).toBeInTheDocument()
     expect(screen.getByText('新聞標題')).toBeInTheDocument()
+    expect(screen.getByText('臺北市')).toBeInTheDocument() // 標注區域
   })
 
-  it('calls onToggle when the toggle button is clicked', () => {
-    const onToggle = vi.fn()
-    render(<AlertsList events={[]} showEvents={false} onToggle={onToggle} />)
-    fireEvent.click(screen.getByRole('button', { name: '顯示即時災害' }))
-    expect(onToggle).toHaveBeenCalled()
+  it('clicking an event calls onSelectEvent', () => {
+    const onSelectEvent = vi.fn()
+    render(<AlertsList events={[incident]} onSelectEvent={onSelectEvent} />)
+    fireEvent.click(screen.getByText('新聞標題'))
+    expect(onSelectEvent).toHaveBeenCalledWith(incident)
   })
 })
