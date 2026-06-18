@@ -27,7 +27,7 @@ export function CountyDrawer({ risk, onClose, events, history }: Props) {
   return (
     <div
       key={risk.code}
-      className="absolute top-0 right-0 h-full w-[21rem] bg-[var(--color-paper)] border-l border-[var(--color-ink)]/15 px-6 py-6 overflow-y-auto rise"
+      className="absolute top-0 right-0 h-full w-full md:w-[21rem] z-10 bg-[var(--color-paper)] border-l border-[var(--color-ink)]/15 px-6 py-6 overflow-y-auto rise"
     >
       <div className="flex items-start justify-between mb-6">
         <div>
