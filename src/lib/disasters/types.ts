@@ -1,4 +1,4 @@
-export type DisasterType = 'earthquake' | 'weather' | 'alert'
+export type DisasterType = 'earthquake' | 'weather' | 'alert' | 'incident'
 export type Severity = 'info' | 'warning' | 'severe'
 
 export interface DisasterEvent {
@@ -8,7 +8,8 @@ export interface DisasterEvent {
   severity: Severity
   countyCodes: string[]
   time: string
-  source: 'CWA' | 'NCDR'
+  source: 'CWA' | 'NCDR' | 'NEWS'
+  url?: string
   lat?: number
   lon?: number
   magnitude?: number

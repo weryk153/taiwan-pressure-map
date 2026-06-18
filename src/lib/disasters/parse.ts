@@ -4,7 +4,7 @@ import type { DisasterEvent, Severity } from './types'
 const codeOf = (name: string): string | undefined => findCountyByName(name?.trim())?.code
 
 /** 從一段文字掃出提到的縣市 code（NCDR 告警把受影響縣市寫在 summary 內文）。 */
-function countyCodesInText(text: string): string[] {
+export function countyCodesInText(text: string): string[] {
   const t = normalizeCountyName(text || '')
   const out: string[] = []
   for (const c of COUNTIES) {

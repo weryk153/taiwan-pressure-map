@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel>
+<title>火災 - Google News</title>
+<item>
+<title>新北市某工廠深夜火災 釀2人輕傷 - 中央社</title>
+<link>https://news.google.com/rss/articles/AAA</link>
+<guid>AAA</guid>
+<pubDate>Wed, 18 Jun 2026 02:10:00 GMT</pubDate>
+<source url="https://www.cna.com.tw">中央社</source>
+</item>
+<item>
+<title>高雄市住宅火警 消防即時撲滅 - 自由時報</title>
+<link>https://news.google.com/rss/articles/BBB</link>
+<guid>BBB</guid>
+<pubDate>Wed, 18 Jun 2026 01:40:00 GMT</pubDate>
+<source url="https://ltn.com.tw">自由時報</source>
+</item>
+<item>
+<title>關於消防演習的一般報導（無縣市）- 某媒體</title>
+<link>https://news.google.com/rss/articles/CCC</link>
+<guid>CCC</guid>
+<pubDate>Wed, 18 Jun 2026 00:00:00 GMT</pubDate>
+<source url="https://x.com">某媒體</source>
+</item>
+<item>
+<title>新北市某工廠深夜火災 釀2人輕傷 - 聯合報</title>
+<link>https://news.google.com/rss/articles/DDD</link>
+<guid>DDD</guid>
+<pubDate>Wed, 18 Jun 2026 02:30:00 GMT</pubDate>
+<source url="https://udn.com">聯合報</source>
+</item>
+</channel></rss>
