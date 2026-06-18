@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "台灣縣市壓力指數",
-    "subtitle": "各縣市綜合壓力指數（示範資料）"
+    "subtitle": "各縣市綜合壓力指數"
   },
   "metrics": {
     "composite": "綜合",
