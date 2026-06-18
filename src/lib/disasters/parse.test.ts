@@ -41,7 +41,8 @@ describe('parseWeatherAlerts', () => {
     expect(yilan.title).toContain('豪雨')
   })
   it('已過期特報被過濾', () => {
-    const expired = parseWeatherAlerts(weather, Date.parse('2026-06-19T00:00:00+08:00'))
+    // 用明確 UTC 且距 fixture endTime（2026-06-18 18:00，無時區）夠遠，確保任何 runner 時區都判定過期
+    const expired = parseWeatherAlerts(weather, Date.parse('2026-06-20T00:00:00Z'))
     expect(expired).toHaveLength(0)
   })
 })
