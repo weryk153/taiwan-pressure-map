@@ -23,6 +23,7 @@ export function buildRiskData(signals: CountySignal[]): CountyRisk[] {
   return COUNTIES.map((county) => {
     const m = byCounty.get(county.code)
     const subScores: Partial<Record<MetricKey, number>> = {}
+    const rawValues: Partial<Record<MetricKey, number>> = {}
     let confSum = 0
     let n = 0
     let asOf: string | null = null
@@ -31,6 +32,7 @@ export function buildRiskData(signals: CountySignal[]): CountyRisk[] {
         const sig = m.get(k)
         if (!sig) continue
         subScores[k] = sig.value
+        if (typeof sig.raw === 'number') rawValues[k] = sig.raw // 原始真實值
         confSum += sig.confidence
         n += 1
         if (sig.asOf && (!asOf || sig.asOf > asOf)) asOf = sig.asOf
@@ -42,6 +44,7 @@ export function buildRiskData(signals: CountySignal[]): CountyRisk[] {
       name: county.name,
       score: hasData ? calculateRiskScore(subScores) : null,
       subScores,
+      rawValues,
       confidence: hasData ? Math.round((confSum / n) * 100) / 100 : 0,
       asOf,
       hasData,
