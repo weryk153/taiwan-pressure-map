@@ -5,6 +5,7 @@ import { toRiskLevel } from '@/lib/score'
 import { METRIC_KEYS, type CountyRisk, type PressurePeriod } from '@/lib/types'
 import type { DisasterEvent } from '@/lib/disasters/types'
 import { formatTaipei } from '@/lib/disasters/time'
+import { RAW_LABEL, formatRaw } from '@/lib/metricMeta'
 
 const SEV_COLOR: Record<string, string> = { severe: '#a8322b', warning: '#b5732f', info: '#6f6657' }
 
@@ -66,30 +67,39 @@ export function CountyDrawer({ risk, onClose, events, history }: Props) {
       )}
 
       <div className="kicker mb-4">{t('drawer.subScores')}</div>
-      <div className="flex flex-col gap-3 mb-8">
+      <div className="flex flex-col gap-3.5 mb-8">
         {METRIC_KEYS.map((k) => {
           const v = risk.subScores[k]
+          const raw = risk.rawValues[k]
           if (v === undefined) {
             return (
-              <div key={k} className="flex items-center gap-3">
-                <span className="w-16 shrink-0 text-[13px] text-[var(--color-ink-2)]">{t(`metrics.${k}`)}</span>
-                <span className="flex-1" />
-                <span className="font-display text-[13px] text-right text-[var(--color-ink-2)]">{t('drawer.noData')}</span>
+              <div key={k} className="flex items-baseline justify-between text-[13px]">
+                <span className="text-[var(--color-ink-2)]">{t(`metrics.${k}`)}</span>
+                <span className="text-[var(--color-ink-2)]">{t('drawer.noData')}</span>
               </div>
             )
           }
           return (
-            <div key={k} className="flex items-center gap-3">
-              <span className="w-16 shrink-0 text-[13px] text-[var(--color-ink-2)]">{t(`metrics.${k}`)}</span>
-              <span className="flex-1 h-[5px] rounded-full bg-[var(--color-ink)]/10 overflow-hidden">
-                <span
-                  className="block h-full rounded-full transition-all"
-                  style={{ width: `${v}%`, background: scoreColor(v) }}
-                />
-              </span>
-              <span className="font-display text-sm tabular-nums w-6 text-right" style={{ color: scoreColor(v) }}>
-                {v}
-              </span>
+            <div key={k}>
+              <div className="flex items-baseline justify-between mb-1">
+                <span className="text-[12px] text-[var(--color-ink-2)]">{t(`metrics.${k}`)}</span>
+                {raw !== undefined && (
+                  <span className="text-[13px] text-[var(--color-ink)]">
+                    {RAW_LABEL[k]} <span className="font-display tabular-nums font-medium">{formatRaw(k, raw)}</span>
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="flex-1 h-[5px] rounded-full bg-[var(--color-ink)]/10 overflow-hidden">
+                  <span
+                    className="block h-full rounded-full transition-all"
+                    style={{ width: `${v}%`, background: scoreColor(v) }}
+                  />
+                </span>
+                <span className="font-display text-sm tabular-nums w-6 text-right" style={{ color: scoreColor(v) }}>
+                  {v}
+                </span>
+              </div>
             </div>
           )
         })}

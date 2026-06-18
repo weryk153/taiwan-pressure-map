@@ -10,6 +10,7 @@ const scored: CountyRisk = {
   name: '臺北市',
   score: 72,
   subScores: { economic: 80, housing: 90 },
+  rawValues: { economic: 5.2, housing: 14.6 },
   confidence: 0.9,
   asOf: '2026-01-01',
   hasData: true,
@@ -20,6 +21,7 @@ const noData: CountyRisk = {
   name: '高雄市',
   score: null,
   subScores: {},
+  rawValues: {},
   confidence: 0,
   asOf: null,
   hasData: false,
@@ -62,6 +64,14 @@ describe('CountyDrawer', () => {
     expect(screen.getByText('90')).toBeInTheDocument()
     // missing metrics render 無資料
     expect(screen.getAllByText('無資料').length).toBeGreaterThan(0)
+  })
+
+  it('顯示原始真實值（含單位）', () => {
+    render(<CountyDrawer risk={scored} onClose={() => {}} />)
+    expect(screen.getByText('失業率')).toBeInTheDocument()
+    expect(screen.getByText('5.2%')).toBeInTheDocument()
+    expect(screen.getByText('房價所得比')).toBeInTheDocument()
+    expect(screen.getByText('14.6 倍')).toBeInTheDocument()
   })
 
   it('shows 無資料 for a county with null score', () => {
