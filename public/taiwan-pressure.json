@@ -687,6 +687,158 @@
       "confidence": 0.8,
       "asOf": "2024",
       "raw": 31.5
+    },
+    {
+      "code": "63000",
+      "metric": "housing",
+      "value": 80,
+      "confidence": 0.8,
+      "asOf": "2025-Q4",
+      "raw": 14.62
+    },
+    {
+      "code": "65000",
+      "metric": "housing",
+      "value": 62,
+      "confidence": 0.8,
+      "asOf": "2025-Q4",
+      "raw": 12.47
+    },
+    {
+      "code": "66000",
+      "metric": "housing",
+      "value": 51,
+      "confidence": 0.8,
+      "asOf": "2025-Q4",
+      "raw": 11.11
+    },
+    {
+      "code": "64000",
+      "metric": "housing",
+      "value": 35,
+      "confidence": 0.8,
+      "asOf": "2025-Q4",
+      "raw": 9.16
+    },
+    {
+      "code": "10005",
+      "metric": "housing",
+      "value": 33,
+      "confidence": 0.8,
+      "asOf": "2025-Q4",
+      "raw": 8.96
+    },
+    {
+      "code": "67000",
+      "metric": "housing",
+      "value": 30,
+      "confidence": 0.8,
+      "asOf": "2025-Q4",
+      "raw": 8.61
+    },
+    {
+      "code": "10015",
+      "metric": "housing",
+      "value": 30,
+      "confidence": 0.8,
+      "asOf": "2025-Q4",
+      "raw": 8.58
+    },
+    {
+      "code": "10009",
+      "metric": "housing",
+      "value": 28,
+      "confidence": 0.8,
+      "asOf": "2025-Q4",
+      "raw": 8.39
+    },
+    {
+      "code": "68000",
+      "metric": "housing",
+      "value": 27,
+      "confidence": 0.8,
+      "asOf": "2025-Q4",
+      "raw": 8.29
+    },
+    {
+      "code": "10018",
+      "metric": "housing",
+      "value": 26,
+      "confidence": 0.8,
+      "asOf": "2025-Q4",
+      "raw": 8.17
+    },
+    {
+      "code": "10008",
+      "metric": "housing",
+      "value": 25,
+      "confidence": 0.8,
+      "asOf": "2025-Q4",
+      "raw": 8.03
+    },
+    {
+      "code": "10014",
+      "metric": "housing",
+      "value": 23,
+      "confidence": 0.8,
+      "asOf": "2025-Q4",
+      "raw": 7.8
+    },
+    {
+      "code": "10002",
+      "metric": "housing",
+      "value": 22,
+      "confidence": 0.8,
+      "asOf": "2025-Q4",
+      "raw": 7.68
+    },
+    {
+      "code": "10007",
+      "metric": "housing",
+      "value": 20,
+      "confidence": 0.8,
+      "asOf": "2025-Q4",
+      "raw": 7.4
+    },
+    {
+      "code": "10004",
+      "metric": "housing",
+      "value": 19,
+      "confidence": 0.8,
+      "asOf": "2025-Q4",
+      "raw": 7.26
+    },
+    {
+      "code": "10013",
+      "metric": "housing",
+      "value": 16,
+      "confidence": 0.8,
+      "asOf": "2025-Q4",
+      "raw": 6.86
+    },
+    {
+      "code": "10010",
+      "metric": "housing",
+      "value": 15,
+      "confidence": 0.8,
+      "asOf": "2025-Q4",
+      "raw": 6.82
+    },
+    {
+      "code": "10020",
+      "metric": "housing",
+      "value": 12,
+      "confidence": 0.8,
+      "asOf": "2025-Q4",
+      "raw": 6.44
+    },
+    {
+      "code": "10017",
+      "metric": "housing",
+      "value": 6,
+      "confidence": 0.8,
+      "asOf": "2025-Q4",
+      "raw": 5.77
     }
   ],
   "sources": [
@@ -726,9 +878,10 @@
       "metric": "housing",
       "label": "房價所得比",
       "agency": "內政部不動產資訊平台",
-      "asOf": "-",
-      "status": "missing"
+      "asOf": "2025-Q4",
+      "status": "live",
+      "url": "https://pip.moi.gov.tw/Publicize/Info/E1050"
     }
   ],
-  "builtAt": "2026-06-18T02:26:03.991Z"
+  "builtAt": "2026-06-18T02:41:47.269Z"
 }
