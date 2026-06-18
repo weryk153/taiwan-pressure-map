@@ -43,8 +43,15 @@ Deno.serve(async (req) => {
   const eq = key ? await getJson(`${CWA}/E-A0015-001?Authorization=${key}&format=JSON`) : null
   const weather = key ? await getJson(`${CWA}/W-C0033-001?Authorization=${key}&format=JSON`) : null
   const capText = await getText(NCDR_URL)
-  // NCDR 回傳格式於真實驗證時校正；先原樣帶出讓前端/後續處理。
-  const cap = capText ? { raw: capText } : null
+  // NCDR 回傳 ATOM-JSON（{entry:[...]}）；parse 後原樣帶給前端 parseCapAlerts。
+  let cap: unknown | null = null
+  if (capText) {
+    try {
+      cap = JSON.parse(capText)
+    } catch {
+      cap = null
+    }
+  }
 
   const body = {
     eq,

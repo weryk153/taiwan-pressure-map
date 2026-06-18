@@ -55,7 +55,10 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, events, showEv
 
   const alertedCodes = useMemo(() => {
     const s = new Set<string>()
-    for (const e of events ?? []) if (e.type !== 'earthquake') e.countyCodes.forEach((c) => s.add(c))
+    // 只描邊「嚴重」等級的縣市；常見且全台廣布的告警（強風/雷雨/高溫）改由 drawer/警示清單呈現，避免淹沒地圖
+    for (const e of events ?? []) {
+      if (e.type !== 'earthquake' && e.severity === 'severe') e.countyCodes.forEach((c) => s.add(c))
+    }
     return s
   }, [events])
 
