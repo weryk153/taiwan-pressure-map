@@ -8,6 +8,7 @@ import { DataSources } from '@/components/DataSources'
 import { AlertsList } from '@/components/AlertsList'
 import { useRiskData } from '@/hooks/useRiskData'
 import { useDisasterEvents } from '@/hooks/useDisasterEvents'
+import { useIncidents } from '@/hooks/useIncidents'
 import { eventsByCounty } from '@/lib/disasters/group'
 import type { MetricKey } from '@/lib/types'
 
@@ -17,6 +18,8 @@ export default function App() {
   const { t } = useTranslation()
   const { data, isLoading, isError } = useRiskData()
   const { data: events = [] } = useDisasterEvents()
+  const { data: incidents = [] } = useIncidents()
+  const allEvents = useMemo(() => [...events, ...incidents], [events, incidents])
   const [colorBy, setColorBy] = useState<ColorBy>('composite')
   const [selectedCode, setSelectedCode] = useState<string | null>(null)
   const [showEvents, setShowEvents] = useState(true)
@@ -27,7 +30,7 @@ export default function App() {
     () => risks?.find((r) => r.code === selectedCode) ?? null,
     [risks, selectedCode],
   )
-  const byCounty = useMemo(() => eventsByCounty(events), [events])
+  const byCounty = useMemo(() => eventsByCounty(allEvents), [allEvents])
 
   return (
     <div className="h-full flex flex-col bg-[var(--color-paper)]">
@@ -61,7 +64,7 @@ export default function App() {
                   onSelect={setSelectedCode}
                 />
               </div>
-              <AlertsList events={events} showEvents={showEvents} onToggle={() => setShowEvents((v) => !v)} />
+              <AlertsList events={allEvents} showEvents={showEvents} onToggle={() => setShowEvents((v) => !v)} />
               <DataSources sources={data.sources} builtAt={data.builtAt} />
             </div>
             <div className="flex-1 relative">
@@ -70,7 +73,7 @@ export default function App() {
                 colorBy={colorBy}
                 selectedCode={selectedCode}
                 onSelect={setSelectedCode}
-                events={events}
+                events={allEvents}
                 showEvents={showEvents}
               />
               <Legend />
