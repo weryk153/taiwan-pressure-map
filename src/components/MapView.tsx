@@ -83,8 +83,14 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, events, showEv
     }
   }, [geo, byCode, colorBy, alertedCodes])
 
-  // 標籤點：每縣市恰一個（質心），避免離島逐島重複標號
-  const labelGeo = useMemo(() => {
+  useEffect(() => {
+    if (!geo || !mapRef.current) return
+    const [minX, minY, maxX, maxY] = bbox(geo)
+    mapRef.current.fitBounds([[minX, minY], [maxX, maxY]], { padding: 64, maxZoom: 8.5, duration: 0 })
+  }, [geo])
+
+  // 縣市壓力圓泡：每縣市質心一個圓，大小+顏色+圓內數字＝壓力分（worldmonitor 風）
+  const bubbleGeo = useMemo(() => {
     if (!geo) return null
     const centroids = computeCentroids(geo)
     return {
@@ -93,16 +99,14 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, events, showEv
         const c = centroids[r.code]
         if (!c || r.score === null) return []
         const v = valueFor(r, colorBy)
-        return [{ type: 'Feature', properties: { label: String(v), _v: v }, geometry: { type: 'Point', coordinates: c } }]
+        return [{
+          type: 'Feature',
+          properties: { code: r.code, v, label: String(v), color: scoreColor(v) },
+          geometry: { type: 'Point', coordinates: c },
+        }]
       }),
     }
   }, [geo, risks, colorBy])
-
-  useEffect(() => {
-    if (!geo || !mapRef.current) return
-    const [minX, minY, maxX, maxY] = bbox(geo)
-    mapRef.current.fitBounds([[minX, minY], [maxX, maxY]], { padding: 64, maxZoom: 8.5, duration: 0 })
-  }, [geo])
 
   const sel = selectedCode ?? ''
 
@@ -117,9 +121,10 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, events, showEv
         dragRotate={false}
         touchPitch={false}
         pitchWithRotate={false}
-        interactiveLayerIds={['county-fill']}
+        interactiveLayerIds={['county-fill', 'county-bubble']}
         onClick={(e) => {
-          const code = e.features?.[0]?.properties?.COUNTYCODE
+          const p = e.features?.[0]?.properties
+          const code = p?.code ?? p?.COUNTYCODE
           if (code) onSelect(code)
         }}
         style={{ width: '100%', height: '100%' }}
@@ -130,8 +135,9 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, events, showEv
               id="county-fill"
               type="fill"
               paint={{
-                'fill-color': ['get', '_color'],
-                'fill-opacity': ['case', ['==', ['get', 'COUNTYCODE'], sel], 1, 0.9],
+                // 中性陸地（讓壓力圓泡跳出來，不與圓泡重複編碼顏色）
+                'fill-color': ['case', ['==', ['get', 'COUNTYCODE'], sel], '#ded3bf', '#e9e2d3'],
+                'fill-opacity': 1,
               }}
             />
             <Layer
@@ -139,8 +145,8 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, events, showEv
               type="line"
               paint={{
                 'line-color': ['case', ['==', ['get', 'COUNTYCODE'], sel], '#b5532f', '#232019'],
-                'line-opacity': ['case', ['==', ['get', 'COUNTYCODE'], sel], 1, 0.3],
-                'line-width': ['case', ['==', ['get', 'COUNTYCODE'], sel], 2, 0.6],
+                'line-opacity': ['case', ['==', ['get', 'COUNTYCODE'], sel], 1, 0.22],
+                'line-width': ['case', ['==', ['get', 'COUNTYCODE'], sel], 2, 0.5],
               }}
             />
             <Layer
@@ -151,22 +157,34 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, events, showEv
             />
           </Source>
         )}
-        {labelGeo && (
-          <Source id="county-labels" type="geojson" data={labelGeo as any}>
+        {bubbleGeo && (
+          <Source id="bubbles" type="geojson" data={bubbleGeo as any}>
             <Layer
-              id="county-label"
+              id="county-bubble"
+              type="circle"
+              paint={{
+                'circle-radius': ['interpolate', ['linear'], ['get', 'v'], 0, 9, 50, 18, 100, 30],
+                'circle-color': ['get', 'color'],
+                'circle-opacity': 0.82,
+                'circle-stroke-color': ['case', ['==', ['get', 'code'], sel], '#231f18', '#ffffff'],
+                'circle-stroke-width': ['case', ['==', ['get', 'code'], sel], 2, 1],
+                'circle-stroke-opacity': ['case', ['==', ['get', 'code'], sel], 1, 0.6],
+              }}
+            />
+            <Layer
+              id="county-bubble-label"
               type="symbol"
               layout={{
                 'text-field': ['get', 'label'],
                 'text-font': ['Open Sans Semibold'],
                 'text-size': 12,
-                'text-allow-overlap': false,
-                'symbol-sort-key': ['-', 100, ['get', '_v']],
+                'text-allow-overlap': true,
+                'text-ignore-placement': true,
               }}
               paint={{
-                'text-color': '#231f18',
-                'text-halo-color': '#f4efe4',
-                'text-halo-width': 1.5,
+                'text-color': '#ffffff',
+                'text-halo-color': '#3a2a1e',
+                'text-halo-width': 1.1,
                 'text-halo-blur': 0.2,
               }}
             />

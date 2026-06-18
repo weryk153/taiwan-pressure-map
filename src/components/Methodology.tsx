@@ -6,8 +6,11 @@ import { METRIC_KEYS } from '@/lib/types'
 /** 計算方式（可展開）：攤開綜合指數的加權與各子指標的門檻換算依據。 */
 export function Methodology() {
   return (
-    <details className="border-t border-[var(--color-ink)]/15 px-6 py-4 bg-[var(--color-paper)]">
-      <summary className="kicker cursor-pointer select-none">計算方式</summary>
+    <details className="group border-t border-[var(--color-ink)]/15 px-6 py-4 bg-[var(--color-paper)]">
+      <summary className="kicker cursor-pointer select-none flex items-center">
+        計算方式
+        <span className="ml-auto text-[var(--color-ink-2)] text-[10px] transition-transform group-open:rotate-90">▸</span>
+      </summary>
       <div className="mt-3 flex flex-col gap-2.5 text-[12px] leading-relaxed text-[var(--color-ink-2)]">
         <p>
           <span className="text-[var(--color-ink)]">綜合壓力指數</span> ＝ 五項子指標的加權平均。
