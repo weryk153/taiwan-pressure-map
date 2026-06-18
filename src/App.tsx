@@ -62,8 +62,18 @@ export default function App() {
       </header>
 
       <div className="flex-1 flex relative overflow-hidden">
-        {isLoading && <div className="m-auto text-[var(--color-ink-2)]">{t('state.loading')}</div>}
-        {isError && <div className="m-auto text-[var(--color-accent)]">{t('state.error')}</div>}
+        {isLoading && (
+          <div className="m-auto text-center rise">
+            <div className="kicker justify-center mb-2">Loading</div>
+            <p className="text-[var(--color-ink-2)]">{t('state.loading')}</p>
+          </div>
+        )}
+        {isError && (
+          <div className="m-auto text-center rise">
+            <div className="kicker justify-center mb-2">Error</div>
+            <p className="text-[var(--color-accent)]">{t('state.error')}</p>
+          </div>
+        )}
         {risks && data && (
           <>
             {panelOpen && (
