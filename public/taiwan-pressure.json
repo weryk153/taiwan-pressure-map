@@ -1,14 +1,734 @@
 {
   "signals": [
-    { "code": "63000", "metric": "economic", "value": 35, "confidence": 0.85, "asOf": "2024" },
-    { "code": "64000", "metric": "economic", "value": 48, "confidence": 0.85, "asOf": "2024" }
+    {
+      "code": "65000",
+      "metric": "economic",
+      "value": 26,
+      "confidence": 0.85,
+      "asOf": "2025",
+      "raw": 3.4
+    },
+    {
+      "code": "63000",
+      "metric": "economic",
+      "value": 26,
+      "confidence": 0.85,
+      "asOf": "2025",
+      "raw": 3.4
+    },
+    {
+      "code": "68000",
+      "metric": "economic",
+      "value": 23,
+      "confidence": 0.85,
+      "asOf": "2025",
+      "raw": 3.3
+    },
+    {
+      "code": "10017",
+      "metric": "economic",
+      "value": 29,
+      "confidence": 0.85,
+      "asOf": "2025",
+      "raw": 3.5
+    },
+    {
+      "code": "10018",
+      "metric": "economic",
+      "value": 26,
+      "confidence": 0.85,
+      "asOf": "2025",
+      "raw": 3.4
+    },
+    {
+      "code": "10002",
+      "metric": "economic",
+      "value": 23,
+      "confidence": 0.85,
+      "asOf": "2025",
+      "raw": 3.3
+    },
+    {
+      "code": "10005",
+      "metric": "economic",
+      "value": 26,
+      "confidence": 0.85,
+      "asOf": "2025",
+      "raw": 3.4
+    },
+    {
+      "code": "66000",
+      "metric": "economic",
+      "value": 26,
+      "confidence": 0.85,
+      "asOf": "2025",
+      "raw": 3.4
+    },
+    {
+      "code": "10007",
+      "metric": "economic",
+      "value": 23,
+      "confidence": 0.85,
+      "asOf": "2025",
+      "raw": 3.3
+    },
+    {
+      "code": "10008",
+      "metric": "economic",
+      "value": 23,
+      "confidence": 0.85,
+      "asOf": "2025",
+      "raw": 3.3
+    },
+    {
+      "code": "10009",
+      "metric": "economic",
+      "value": 23,
+      "confidence": 0.85,
+      "asOf": "2025",
+      "raw": 3.3
+    },
+    {
+      "code": "10010",
+      "metric": "economic",
+      "value": 26,
+      "confidence": 0.85,
+      "asOf": "2025",
+      "raw": 3.4
+    },
+    {
+      "code": "67000",
+      "metric": "economic",
+      "value": 26,
+      "confidence": 0.85,
+      "asOf": "2025",
+      "raw": 3.4
+    },
+    {
+      "code": "64000",
+      "metric": "economic",
+      "value": 20,
+      "confidence": 0.85,
+      "asOf": "2025",
+      "raw": 3.2
+    },
+    {
+      "code": "10004",
+      "metric": "economic",
+      "value": 23,
+      "confidence": 0.85,
+      "asOf": "2025",
+      "raw": 3.3
+    },
+    {
+      "code": "10020",
+      "metric": "economic",
+      "value": 26,
+      "confidence": 0.85,
+      "asOf": "2025",
+      "raw": 3.4
+    },
+    {
+      "code": "10013",
+      "metric": "economic",
+      "value": 23,
+      "confidence": 0.85,
+      "asOf": "2025",
+      "raw": 3.3
+    },
+    {
+      "code": "10016",
+      "metric": "economic",
+      "value": 26,
+      "confidence": 0.85,
+      "asOf": "2025",
+      "raw": 3.4
+    },
+    {
+      "code": "10014",
+      "metric": "economic",
+      "value": 23,
+      "confidence": 0.85,
+      "asOf": "2025",
+      "raw": 3.3
+    },
+    {
+      "code": "10015",
+      "metric": "economic",
+      "value": 20,
+      "confidence": 0.85,
+      "asOf": "2025",
+      "raw": 3.2
+    },
+    {
+      "code": "10002",
+      "metric": "demographic",
+      "value": 58,
+      "confidence": 0.85,
+      "asOf": "2026-05",
+      "raw": 194.6
+    },
+    {
+      "code": "10004",
+      "metric": "demographic",
+      "value": 47,
+      "confidence": 0.85,
+      "asOf": "2026-05",
+      "raw": 168.7
+    },
+    {
+      "code": "10005",
+      "metric": "demographic",
+      "value": 22,
+      "confidence": 0.85,
+      "asOf": "2026-05",
+      "raw": 105.1
+    },
+    {
+      "code": "10007",
+      "metric": "demographic",
+      "value": 54,
+      "confidence": 0.85,
+      "asOf": "2026-05",
+      "raw": 184.3
+    },
+    {
+      "code": "10008",
+      "metric": "demographic",
+      "value": 54,
+      "confidence": 0.85,
+      "asOf": "2026-05",
+      "raw": 184.4
+    },
+    {
+      "code": "10009",
+      "metric": "demographic",
+      "value": 72,
+      "confidence": 0.85,
+      "asOf": "2026-05",
+      "raw": 230.7
+    },
+    {
+      "code": "10010",
+      "metric": "demographic",
+      "value": 65,
+      "confidence": 0.85,
+      "asOf": "2026-05",
+      "raw": 212.5
+    },
+    {
+      "code": "10013",
+      "metric": "demographic",
+      "value": 69,
+      "confidence": 0.85,
+      "asOf": "2026-05",
+      "raw": 223.3
+    },
+    {
+      "code": "10014",
+      "metric": "demographic",
+      "value": 60,
+      "confidence": 0.85,
+      "asOf": "2026-05",
+      "raw": 200.2
+    },
+    {
+      "code": "10015",
+      "metric": "demographic",
+      "value": 63,
+      "confidence": 0.85,
+      "asOf": "2026-05",
+      "raw": 206.9
+    },
+    {
+      "code": "10016",
+      "metric": "demographic",
+      "value": 73,
+      "confidence": 0.85,
+      "asOf": "2026-05",
+      "raw": 232.6
+    },
+    {
+      "code": "10017",
+      "metric": "demographic",
+      "value": 79,
+      "confidence": 0.85,
+      "asOf": "2026-05",
+      "raw": 247.4
+    },
+    {
+      "code": "10018",
+      "metric": "demographic",
+      "value": 24,
+      "confidence": 0.85,
+      "asOf": "2026-05",
+      "raw": 110
+    },
+    {
+      "code": "10020",
+      "metric": "demographic",
+      "value": 100,
+      "confidence": 0.85,
+      "asOf": "2026-05",
+      "raw": 301.9
+    },
+    {
+      "code": "63000",
+      "metric": "demographic",
+      "value": 63,
+      "confidence": 0.85,
+      "asOf": "2026-05",
+      "raw": 208.2
+    },
+    {
+      "code": "64000",
+      "metric": "demographic",
+      "value": 59,
+      "confidence": 0.85,
+      "asOf": "2026-05",
+      "raw": 197.8
+    },
+    {
+      "code": "65000",
+      "metric": "demographic",
+      "value": 57,
+      "confidence": 0.85,
+      "asOf": "2026-05",
+      "raw": 191.9
+    },
+    {
+      "code": "66000",
+      "metric": "demographic",
+      "value": 36,
+      "confidence": 0.85,
+      "asOf": "2026-05",
+      "raw": 141
+    },
+    {
+      "code": "67000",
+      "metric": "demographic",
+      "value": 56,
+      "confidence": 0.85,
+      "asOf": "2026-05",
+      "raw": 190.4
+    },
+    {
+      "code": "68000",
+      "metric": "demographic",
+      "value": 33,
+      "confidence": 0.85,
+      "asOf": "2026-05",
+      "raw": 132.3
+    },
+    {
+      "code": "09007",
+      "metric": "demographic",
+      "value": 86,
+      "confidence": 0.85,
+      "asOf": "2026-05",
+      "raw": 266
+    },
+    {
+      "code": "09020",
+      "metric": "demographic",
+      "value": 56,
+      "confidence": 0.85,
+      "asOf": "2026-05",
+      "raw": 190.6
+    },
+    {
+      "code": "65000",
+      "metric": "safety",
+      "value": 44,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 1551.8
+    },
+    {
+      "code": "63000",
+      "metric": "safety",
+      "value": 70,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 1987.6
+    },
+    {
+      "code": "68000",
+      "metric": "safety",
+      "value": 45,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 1563.9
+    },
+    {
+      "code": "66000",
+      "metric": "safety",
+      "value": 43,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 1530.1
+    },
+    {
+      "code": "67000",
+      "metric": "safety",
+      "value": 63,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 1877.3
+    },
+    {
+      "code": "64000",
+      "metric": "safety",
+      "value": 46,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 1574
+    },
+    {
+      "code": "10002",
+      "metric": "safety",
+      "value": 71,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 2010.4
+    },
+    {
+      "code": "10005",
+      "metric": "safety",
+      "value": 47,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 1597.4
+    },
+    {
+      "code": "10007",
+      "metric": "safety",
+      "value": 68,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 1951.8
+    },
+    {
+      "code": "10008",
+      "metric": "safety",
+      "value": 46,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 1582.8
+    },
+    {
+      "code": "10009",
+      "metric": "safety",
+      "value": 58,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 1782
+    },
+    {
+      "code": "10010",
+      "metric": "safety",
+      "value": 52,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 1680.5
+    },
+    {
+      "code": "10020",
+      "metric": "safety",
+      "value": 53,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 1704.6
+    },
+    {
+      "code": "10013",
+      "metric": "safety",
+      "value": 54,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 1710.6
+    },
+    {
+      "code": "10014",
+      "metric": "safety",
+      "value": 36,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 1414.4
+    },
+    {
+      "code": "10015",
+      "metric": "safety",
+      "value": 80,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 2166
+    },
+    {
+      "code": "10016",
+      "metric": "safety",
+      "value": 47,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 1598.3
+    },
+    {
+      "code": "10017",
+      "metric": "safety",
+      "value": 78,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 2123.3
+    },
+    {
+      "code": "10018",
+      "metric": "safety",
+      "value": 74,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 2051.6
+    },
+    {
+      "code": "10004",
+      "metric": "safety",
+      "value": 68,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 1954.1
+    },
+    {
+      "code": "09007",
+      "metric": "safety",
+      "value": 5,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 891.1
+    },
+    {
+      "code": "09020",
+      "metric": "safety",
+      "value": 60,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 1822
+    },
+    {
+      "code": "10002",
+      "metric": "healthcare",
+      "value": 13,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 72
+    },
+    {
+      "code": "10004",
+      "metric": "healthcare",
+      "value": 0,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 133.3
+    },
+    {
+      "code": "10005",
+      "metric": "healthcare",
+      "value": 48,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 51
+    },
+    {
+      "code": "10007",
+      "metric": "healthcare",
+      "value": 45,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 53.1
+    },
+    {
+      "code": "10008",
+      "metric": "healthcare",
+      "value": 34,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 59.3
+    },
+    {
+      "code": "10009",
+      "metric": "healthcare",
+      "value": 22,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 66.8
+    },
+    {
+      "code": "10010",
+      "metric": "healthcare",
+      "value": 48,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 51.1
+    },
+    {
+      "code": "10013",
+      "metric": "healthcare",
+      "value": 20,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 68.2
+    },
+    {
+      "code": "10014",
+      "metric": "healthcare",
+      "value": 30,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 62
+    },
+    {
+      "code": "10015",
+      "metric": "healthcare",
+      "value": 0,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 134.1
+    },
+    {
+      "code": "10016",
+      "metric": "healthcare",
+      "value": 58,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 45.3
+    },
+    {
+      "code": "10017",
+      "metric": "healthcare",
+      "value": 25,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 65.1
+    },
+    {
+      "code": "10018",
+      "metric": "healthcare",
+      "value": 43,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 54.1
+    },
+    {
+      "code": "10020",
+      "metric": "healthcare",
+      "value": 30,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 62
+    },
+    {
+      "code": "63000",
+      "metric": "healthcare",
+      "value": 0,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 81.7
+    },
+    {
+      "code": "64000",
+      "metric": "healthcare",
+      "value": 24,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 65.3
+    },
+    {
+      "code": "65000",
+      "metric": "healthcare",
+      "value": 74,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 35.9
+    },
+    {
+      "code": "66000",
+      "metric": "healthcare",
+      "value": 26,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 64.4
+    },
+    {
+      "code": "67000",
+      "metric": "healthcare",
+      "value": 44,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 53.5
+    },
+    {
+      "code": "68000",
+      "metric": "healthcare",
+      "value": 51,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 49.5
+    },
+    {
+      "code": "09007",
+      "metric": "healthcare",
+      "value": 97,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 22
+    },
+    {
+      "code": "09020",
+      "metric": "healthcare",
+      "value": 81,
+      "confidence": 0.8,
+      "asOf": "2024",
+      "raw": 31.5
+    }
   ],
   "sources": [
-    { "metric": "economic", "label": "失業率", "agency": "主計總處", "asOf": "2024", "status": "live" },
-    { "metric": "housing", "label": "房價所得比", "agency": "內政部不動產資訊平台", "asOf": "-", "status": "missing" },
-    { "metric": "demographic", "label": "老化指數", "agency": "內政部戶政司", "asOf": "-", "status": "missing" },
-    { "metric": "safety", "label": "刑案發生率", "agency": "警政署", "asOf": "-", "status": "missing" },
-    { "metric": "healthcare", "label": "每萬人病床數", "agency": "衛福部", "asOf": "-", "status": "missing" }
+    {
+      "metric": "economic",
+      "label": "失業率",
+      "agency": "主計總處",
+      "asOf": "2025",
+      "status": "live",
+      "url": "https://ws.dgbas.gov.tw/001/Upload/461/relfile/11525/230038/mp0101a10.xml"
+    },
+    {
+      "metric": "demographic",
+      "label": "老化指數",
+      "agency": "內政部戶政司",
+      "asOf": "2026-05",
+      "status": "live",
+      "url": "https://data.gov.tw/dataset/77132"
+    },
+    {
+      "metric": "safety",
+      "label": "刑案發生率",
+      "agency": "警政署",
+      "asOf": "2024",
+      "status": "live",
+      "url": "https://statis.moi.gov.tw/micst/webMain.aspx?sys=220&kind=21&type=1&funid=c0620101&cycle=41&outmode=12&utf=1&compmode=0&outkind=3&fld0=1&codspc0=0,2,3,2,6,1,9,1,12,1,15,17,&rdm=NIirnBpa&ym=11300&ymt=11312"
+    },
+    {
+      "metric": "healthcare",
+      "label": "每萬人病床數",
+      "agency": "衛福部",
+      "asOf": "2024",
+      "status": "live",
+      "url": "https://data.gov.tw/dataset/6473"
+    },
+    {
+      "metric": "housing",
+      "label": "房價所得比",
+      "agency": "內政部不動產資訊平台",
+      "asOf": "-",
+      "status": "missing"
+    }
   ],
-  "builtAt": "2026-06-18T00:00:00.000Z"
+  "builtAt": "2026-06-18T02:25:20.244Z"
 }
