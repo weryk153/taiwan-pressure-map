@@ -1,5 +1,5 @@
 // news — 薄 proxy（無需 key）：對人禍類別查 Google News RSS、回原始 XML + CORS + 快取。
-// 解析（標題掃縣市/分類/去重/近48h）在前端 src/lib/incidents/parse.ts。
+// 解析（標題掃縣市/分類/去重/近 7 天）在前端 src/lib/incidents/parse.ts。
 const cors = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
