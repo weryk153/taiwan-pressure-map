@@ -1,0 +1,22 @@
+{
+  "records": {
+    "Earthquake": [
+      {
+        "EarthquakeNo": 114001,
+        "EarthquakeInfo": {
+          "OriginTime": "2026-06-18 03:12:00",
+          "FocalDepth": 18.2,
+          "Epicenter": { "Location": "花蓮縣政府南南西方", "EpicenterLatitude": 23.7, "EpicenterLongitude": 121.4 },
+          "EarthquakeMagnitude": { "MagnitudeType": "ML", "MagnitudeValue": 5.4 }
+        },
+        "Intensity": {
+          "ShakingArea": [
+            { "CountyName": "花蓮縣", "AreaIntensity": "5弱" },
+            { "CountyName": "臺東縣", "AreaIntensity": "4級" },
+            { "CountyName": "南投縣", "AreaIntensity": "3級" }
+          ]
+        }
+      }
+    ]
+  }
+}

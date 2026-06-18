@@ -1,0 +1,18 @@
+{
+  "records": {
+    "location": [
+      {
+        "locationName": "宜蘭縣",
+        "hazardConditions": { "hazards": [
+          { "info": { "phenomena": "豪雨", "significance": "" }, "validTime": { "startTime": "2026-06-18 02:00:00", "endTime": "2026-06-18 18:00:00" } }
+        ] }
+      },
+      {
+        "locationName": "臺北市",
+        "hazardConditions": { "hazards": [
+          { "info": { "phenomena": "大雨", "significance": "" }, "validTime": { "startTime": "2026-06-18 02:00:00", "endTime": "2026-06-18 18:00:00" } }
+        ] }
+      }
+    ]
+  }
+}
