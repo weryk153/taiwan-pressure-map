@@ -120,9 +120,9 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes
               id="county-line"
               type="line"
               paint={{
-                'line-color': ['interpolate', ['linear'], ['zoom'], 7, PAPER, 8.5, '#7a6850'],
-                'line-width': ['interpolate', ['linear'], ['zoom'], 7, 0.8, 9.5, 1.5],
-                'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.6, 8.5, 0.95],
+                'line-color': ['interpolate', ['linear'], ['zoom'], 7, PAPER, 9, '#a8967a'],
+                'line-width': ['interpolate', ['linear'], ['zoom'], 7, 0.6, 10, 0.9],
+                'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.5, 9, 0.62],
               }}
             />
             {/* 事件縣市：青色細實線輪廓（勾選的事件圖層中有事件的縣市） */}
@@ -153,7 +153,7 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes
                 source="counties"
                 type="line"
                 filter={['==', ['get', 'COUNTYCODE'], sel]}
-                paint={{ 'line-color': PAPER, 'line-width': 4, 'line-opacity': 0.9 }}
+                paint={{ 'line-color': PAPER, 'line-width': 3, 'line-opacity': 0.8 }}
               />
             )}
             {sel && (
@@ -162,7 +162,7 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes
                 source="counties"
                 type="line"
                 filter={['==', ['get', 'COUNTYCODE'], sel]}
-                paint={{ 'line-color': '#3a2a1e', 'line-width': 2, 'line-opacity': 1 }}
+                paint={{ 'line-color': '#5a4632', 'line-width': 1.4, 'line-opacity': 0.95 }}
               />
             )}
           </Source>
@@ -175,9 +175,9 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes
               type="line"
               beforeId="county-line"
               paint={{
-                'line-color': '#6f5a40',
-                'line-width': ['interpolate', ['linear'], ['zoom'], 8.5, 0.5, 10.5, 0.9],
-                'line-opacity': ['interpolate', ['linear'], ['zoom'], 8.3, 0, 9.5, 0.5, 10.5, 0.7],
+                'line-color': '#bcae96',
+                'line-width': ['interpolate', ['linear'], ['zoom'], 8.5, 0.4, 10.5, 0.6],
+                'line-opacity': ['interpolate', ['linear'], ['zoom'], 8.3, 0, 9.5, 0.4, 10.5, 0.55],
               }}
             />
           </Source>
