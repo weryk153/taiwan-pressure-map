@@ -25,7 +25,8 @@ interface Props {
 /** 地圖左上的浮動圖層面板：上＝壓力維度（單選），下＝事件圖層（多選）。 */
 export function LayerControl({ colorBy, onColorBy, events, layers, onToggleLayer }: Props) {
   const { t } = useTranslation()
-  const [open, setOpen] = useState(true)
+  // 桌機預設展開；手機預設收合（避免面板蓋住整張地圖）
+  const [open, setOpen] = useState(() => typeof window === 'undefined' || window.innerWidth >= 768)
   const dims: ColorBy[] = ['composite', ...METRIC_KEYS]
   const counts = events.reduce<Record<string, number>>((acc, e) => {
     acc[e.type] = (acc[e.type] ?? 0) + 1
@@ -101,7 +102,7 @@ export function LayerControl({ colorBy, onColorBy, events, layers, onToggleLayer
           </div>
         </div>
       )}
-      <Legend />
+      {open && <Legend />}
     </div>
   )
 }

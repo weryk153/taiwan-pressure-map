@@ -93,6 +93,7 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes
       <MapGL
         ref={mapRef}
         mapStyle={STYLE as any}
+        attributionControl={false}
         initialViewState={{ longitude: 120.7, latitude: 23.8, zoom: 6.6 }}
         minZoom={6}
         maxZoom={11}

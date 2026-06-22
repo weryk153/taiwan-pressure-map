@@ -84,9 +84,9 @@ export default function App() {
               <h1 className="font-serif text-[22px] sm:text-[27px] leading-none font-bold tracking-tight truncate">{t('app.title')}</h1>
             </div>
           </div>
-          <div className="text-right shrink-0">
-            <div className="hidden sm:block font-display text-sm italic text-[var(--color-ink-2)]">Taiwan County Pressure Index</div>
-            <div className="text-[10px] tracking-[0.2em] uppercase text-[var(--color-ink-2)] sm:mt-1">
+          <div className="text-right shrink-0 hidden sm:block">
+            <div className="font-display text-sm italic text-[var(--color-ink-2)]">Taiwan County Pressure Index</div>
+            <div className="text-[10px] tracking-[0.2em] uppercase text-[var(--color-ink-2)] mt-1">
               2026 · {allLive ? t('badge.real') : t('badge.partial')}
             </div>
           </div>
