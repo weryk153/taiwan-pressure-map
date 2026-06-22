@@ -15,7 +15,8 @@ export function Methodology() {
         <p>
           <span className="text-[var(--color-ink)]">綜合壓力指數</span> ＝ 五項子指標的加權平均。
           各子指標把原始值依「絕對門檻」換算成 0–100（低標→0、高標→100，超出裁切）；
-          數值越高壓力越大，<span className="text-[var(--color-ink)]">醫療資源相反</span>（病床越少壓力越大）。
+          數值越高壓力越大，其中<span className="text-[var(--color-ink)]">每戶可支配所得、醫療資源為反向</span>
+          （所得越高、病床越多 → 壓力越小）。
         </p>
         <ul className="flex flex-col gap-1">
           {METRIC_KEYS.map((k) => {
@@ -34,7 +35,8 @@ export function Methodology() {
           })}
         </ul>
         <p className="text-[11px] text-[var(--color-ink-2)]/70">
-          門檻為先驗設定、可校準；原始統計來源見上方「資料來源」。
+          綜合指數是本站以「透明、可調整的加權」自行合成，<span className="text-[var(--color-ink-2)]">非官方指標</span>；
+          權重與門檻為先驗設定、可校準。真正客觀的是各項原始統計，建議搭配單項（壓力面向）一起看。原始來源見上方「資料來源」。
         </p>
       </div>
     </details>

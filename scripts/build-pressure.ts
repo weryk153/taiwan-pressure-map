@@ -31,7 +31,7 @@ const FETCHERS: { metric: string; fn: SourceFetcher }[] = [
 ]
 
 const LABELS: Record<string, { label: string; agency: string }> = {
-  economic: { label: '失業率', agency: '主計總處' },
+  economic: { label: '每戶可支配所得', agency: '主計總處' },
   demographic: { label: '老化指數', agency: '內政部戶政司' },
   safety: { label: '刑案發生率', agency: '警政署' },
   healthcare: { label: '每萬人病床數', agency: '衛福部' },

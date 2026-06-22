@@ -3,35 +3,42 @@ import { normalizeMetric } from '../../src/lib/normalize'
 import type { SourceFetcher } from './types'
 
 /**
- * 主計總處「縣市別失業率」（data.gov.tw dataset 6640），XML 寬表。
- * 每筆 <縣市別失業率> 為一時期；縣市為子標籤 <中文_English_百分比>值</...>。
- * 取最新「整年度」（4 位數年份）紀錄。不含金門/連江（調查不涵蓋離島）。
+ * 主計總處「家庭收支調查－平均每戶可支配所得按區域別分」（data.gov.tw dataset 9415），寬表 CSV。
+ * 第一列表頭為「年, 臺灣地區-元, 新北市-元, …」，其後每列為一年度；取最新年度各縣市值。
+ * 原始值以「萬元」記。不含金門/連江（調查不涵蓋離島）。
+ * 反向指標：所得越高、壓力越低（門檻於 normalize.ts 以 lo>hi 表達）。
+ *
+ * 取代原「失業率」：全台失業率集中在 3.2–3.5%、跨縣市幾乎無差異（鑑別度極低）；
+ * 改用可支配所得後，經濟面向才真正反映各縣市差距。
  */
-const URL = 'https://ws.dgbas.gov.tw/001/Upload/461/relfile/11525/230038/mp0101a10.xml'
+const URL =
+  'https://ws.dgbas.gov.tw/001/Upload/461/relfile/11525/232214/006-平均每戶可支配所得按區域別分.csv'
 
-/** 從 XML 取最新整年度各縣市失業率。回傳 { rows, asOf }。 */
-export function parseUnemployment(raw: string): { rows: { code: string; raw: number }[]; asOf: string } {
-  const recs = raw.match(/<縣市別失業率>[\s\S]*?<\/縣市別失業率>/g) ?? []
-  const yearOf = (rec: string) => (rec.match(/<年月別_Year_and_month>(.*?)<\//)?.[1] ?? '').trim()
-  const annual = recs.filter((r) => /^\d{4}$/.test(yearOf(r)))
-  if (annual.length === 0) return { rows: [], asOf: '' }
-  const last = annual[annual.length - 1]
-  const asOf = yearOf(last)
+/** 解析寬表 CSV，取最新年度各縣市「平均每戶可支配所得」（萬元，1 位小數）。純函式便於測試。 */
+export function parseIncome(raw: string): { rows: { code: string; raw: number }[]; asOf: string } {
+  const lines = raw.replace(/^﻿/, '').trim().split(/\r?\n/)
+  if (lines.length < 2) return { rows: [], asOf: '' }
+  const cell = (s: string) => s.replace(/^"|"$/g, '').trim()
+  const header = lines[0].split(',').map(cell) // ['年','臺灣地區-元','新北市-元', …]
+  const last = lines[lines.length - 1].split(',').map(cell)
+  const asOf = last[0]
   const rows: { code: string; raw: number }[] = []
-  // 子標籤如 <臺北市_Taipei_City_百分比>3.4</...>；取中文段（第一個 _ 前）。
-  for (const m of last.matchAll(/<([^>_]+)_[^>]*?_百分比>([^<]*)<\//g)) {
-    const name = m[1].trim()
+  for (let i = 1; i < header.length; i++) {
+    const name = header[i].replace(/-元$/, '')
+    if (name === '臺灣地區') continue // 跳過全國彙總
     const c = findCountyByName(name)
-    const v = Number((m[2] ?? '').replace(/[",\s%]/g, ''))
-    if (c && Number.isFinite(v) && m[2].trim() !== '') rows.push({ code: c.code, raw: v })
+    const yuan = Number((last[i] ?? '').replace(/[",\s]/g, ''))
+    if (c && Number.isFinite(yuan) && yuan > 0) {
+      rows.push({ code: c.code, raw: Math.round(yuan / 1000) / 10 }) // 元 → 萬元
+    }
   }
   return { rows, asOf }
 }
 
 export const economic: SourceFetcher = async () => {
-  const res = await fetch(URL, { headers: { 'User-Agent': 'Mozilla/5.0' } })
+  const res = await fetch(encodeURI(URL), { headers: { 'User-Agent': 'Mozilla/5.0' } })
   if (!res.ok) throw new Error(`economic ${res.status}`)
-  const { rows, asOf } = parseUnemployment(await res.text())
+  const { rows, asOf } = parseIncome(await res.text())
   if (rows.length === 0) throw new Error('economic 解析 0 筆')
   return {
     signals: rows.map((r) => ({
@@ -42,6 +49,6 @@ export const economic: SourceFetcher = async () => {
       asOf,
       raw: r.raw,
     })),
-    meta: { metric: 'economic', label: '失業率', agency: '主計總處', asOf, status: 'live', url: URL },
+    meta: { metric: 'economic', label: '每戶可支配所得', agency: '主計總處', asOf, status: 'live', url: URL },
   }
 }

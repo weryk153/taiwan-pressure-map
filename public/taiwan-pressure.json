@@ -3,162 +3,162 @@
     {
       "code": "65000",
       "metric": "economic",
-      "value": 26,
+      "value": 41,
       "confidence": 0.85,
-      "asOf": "2025",
-      "raw": 3.4
+      "asOf": "2024",
+      "raw": 121.9
     },
     {
       "code": "63000",
       "metric": "economic",
-      "value": 26,
+      "value": 8,
       "confidence": 0.85,
-      "asOf": "2025",
-      "raw": 3.4
+      "asOf": "2024",
+      "raw": 148.5
     },
     {
       "code": "68000",
       "metric": "economic",
-      "value": 23,
+      "value": 39,
       "confidence": 0.85,
-      "asOf": "2025",
-      "raw": 3.3
-    },
-    {
-      "code": "10017",
-      "metric": "economic",
-      "value": 29,
-      "confidence": 0.85,
-      "asOf": "2025",
-      "raw": 3.5
-    },
-    {
-      "code": "10018",
-      "metric": "economic",
-      "value": 26,
-      "confidence": 0.85,
-      "asOf": "2025",
-      "raw": 3.4
-    },
-    {
-      "code": "10002",
-      "metric": "economic",
-      "value": 23,
-      "confidence": 0.85,
-      "asOf": "2025",
-      "raw": 3.3
-    },
-    {
-      "code": "10005",
-      "metric": "economic",
-      "value": 26,
-      "confidence": 0.85,
-      "asOf": "2025",
-      "raw": 3.4
+      "asOf": "2024",
+      "raw": 124.1
     },
     {
       "code": "66000",
       "metric": "economic",
-      "value": 26,
+      "value": 47,
       "confidence": 0.85,
-      "asOf": "2025",
-      "raw": 3.4
-    },
-    {
-      "code": "10007",
-      "metric": "economic",
-      "value": 23,
-      "confidence": 0.85,
-      "asOf": "2025",
-      "raw": 3.3
-    },
-    {
-      "code": "10008",
-      "metric": "economic",
-      "value": 23,
-      "confidence": 0.85,
-      "asOf": "2025",
-      "raw": 3.3
-    },
-    {
-      "code": "10009",
-      "metric": "economic",
-      "value": 23,
-      "confidence": 0.85,
-      "asOf": "2025",
-      "raw": 3.3
-    },
-    {
-      "code": "10010",
-      "metric": "economic",
-      "value": 26,
-      "confidence": 0.85,
-      "asOf": "2025",
-      "raw": 3.4
+      "asOf": "2024",
+      "raw": 117.2
     },
     {
       "code": "67000",
       "metric": "economic",
-      "value": 26,
+      "value": 68,
       "confidence": 0.85,
-      "asOf": "2025",
-      "raw": 3.4
+      "asOf": "2024",
+      "raw": 101
     },
     {
       "code": "64000",
       "metric": "economic",
-      "value": 20,
+      "value": 51,
       "confidence": 0.85,
-      "asOf": "2025",
-      "raw": 3.2
+      "asOf": "2024",
+      "raw": 114.4
     },
     {
-      "code": "10004",
+      "code": "10002",
       "metric": "economic",
-      "value": 23,
+      "value": 76,
       "confidence": 0.85,
-      "asOf": "2025",
-      "raw": 3.3
+      "asOf": "2024",
+      "raw": 94
+    },
+    {
+      "code": "10005",
+      "metric": "economic",
+      "value": 9,
+      "confidence": 0.85,
+      "asOf": "2024",
+      "raw": 148.2
+    },
+    {
+      "code": "10007",
+      "metric": "economic",
+      "value": 48,
+      "confidence": 0.85,
+      "asOf": "2024",
+      "raw": 116.4
+    },
+    {
+      "code": "10008",
+      "metric": "economic",
+      "value": 79,
+      "confidence": 0.85,
+      "asOf": "2024",
+      "raw": 91.8
+    },
+    {
+      "code": "10009",
+      "metric": "economic",
+      "value": 82,
+      "confidence": 0.85,
+      "asOf": "2024",
+      "raw": 89.2
+    },
+    {
+      "code": "10010",
+      "metric": "economic",
+      "value": 76,
+      "confidence": 0.85,
+      "asOf": "2024",
+      "raw": 93.9
     },
     {
       "code": "10020",
       "metric": "economic",
-      "value": 26,
+      "value": 89,
       "confidence": 0.85,
-      "asOf": "2025",
-      "raw": 3.4
+      "asOf": "2024",
+      "raw": 83.7
     },
     {
       "code": "10013",
       "metric": "economic",
-      "value": 23,
+      "value": 80,
       "confidence": 0.85,
-      "asOf": "2025",
-      "raw": 3.3
-    },
-    {
-      "code": "10016",
-      "metric": "economic",
-      "value": 26,
-      "confidence": 0.85,
-      "asOf": "2025",
-      "raw": 3.4
+      "asOf": "2024",
+      "raw": 90.8
     },
     {
       "code": "10014",
       "metric": "economic",
-      "value": 23,
+      "value": 96,
       "confidence": 0.85,
-      "asOf": "2025",
-      "raw": 3.3
+      "asOf": "2024",
+      "raw": 78.3
     },
     {
       "code": "10015",
       "metric": "economic",
-      "value": 20,
+      "value": 81,
       "confidence": 0.85,
-      "asOf": "2025",
-      "raw": 3.2
+      "asOf": "2024",
+      "raw": 90.4
+    },
+    {
+      "code": "10016",
+      "metric": "economic",
+      "value": 95,
+      "confidence": 0.85,
+      "asOf": "2024",
+      "raw": 79.3
+    },
+    {
+      "code": "10017",
+      "metric": "economic",
+      "value": 79,
+      "confidence": 0.85,
+      "asOf": "2024",
+      "raw": 91.9
+    },
+    {
+      "code": "10018",
+      "metric": "economic",
+      "value": 6,
+      "confidence": 0.85,
+      "asOf": "2024",
+      "raw": 150.4
+    },
+    {
+      "code": "10004",
+      "metric": "economic",
+      "value": 42,
+      "confidence": 0.85,
+      "asOf": "2024",
+      "raw": 121.3
     },
     {
       "code": "10002",
@@ -844,11 +844,11 @@
   "sources": [
     {
       "metric": "economic",
-      "label": "失業率",
+      "label": "每戶可支配所得",
       "agency": "主計總處",
-      "asOf": "2025",
+      "asOf": "2024",
       "status": "live",
-      "url": "https://ws.dgbas.gov.tw/001/Upload/461/relfile/11525/230038/mp0101a10.xml"
+      "url": "https://ws.dgbas.gov.tw/001/Upload/461/relfile/11525/232214/006-平均每戶可支配所得按區域別分.csv"
     },
     {
       "metric": "demographic",
@@ -883,5 +883,5 @@
       "url": "https://pip.moi.gov.tw/Publicize/Info/E1050"
     }
   ],
-  "builtAt": "2026-06-18T09:30:09.473Z"
+  "builtAt": "2026-06-22T17:42:40.470Z"
 }

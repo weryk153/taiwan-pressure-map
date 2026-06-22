@@ -14,17 +14,22 @@ describe('THRESHOLDS', () => {
 
 describe('normalizeMetric', () => {
   it('lo→0、hi→100、中間線性', () => {
-    expect(normalizeMetric('economic', 2.5)).toBe(0)
-    expect(normalizeMetric('economic', 6.0)).toBe(100)
-    expect(normalizeMetric('economic', 4.25)).toBe(50)
+    expect(normalizeMetric('safety', 800)).toBe(0)
+    expect(normalizeMetric('safety', 2500)).toBe(100)
+    expect(normalizeMetric('safety', 1650)).toBe(50)
   })
   it('超界裁切', () => {
-    expect(normalizeMetric('economic', 1)).toBe(0)
-    expect(normalizeMetric('economic', 9)).toBe(100)
+    expect(normalizeMetric('safety', 100)).toBe(0)
+    expect(normalizeMetric('safety', 9999)).toBe(100)
   })
   it('醫療為反向（床多→壓力低）', () => {
     expect(normalizeMetric('healthcare', 80)).toBe(0)
     expect(normalizeMetric('healthcare', 20)).toBe(100)
     expect(normalizeMetric('healthcare', 50)).toBe(50)
+  })
+  it('每戶可支配所得為反向（所得高→壓力低）', () => {
+    expect(normalizeMetric('economic', 155)).toBe(0)
+    expect(normalizeMetric('economic', 75)).toBe(100)
+    expect(normalizeMetric('economic', 115)).toBe(50)
   })
 })

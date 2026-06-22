@@ -10,7 +10,7 @@ const scored: CountyRisk = {
   name: '臺北市',
   score: 72,
   subScores: { economic: 80, housing: 90 },
-  rawValues: { economic: 5.2, housing: 14.6 },
+  rawValues: { economic: 95.0, housing: 14.6 },
   confidence: 0.9,
   asOf: '2026-01-01',
   hasData: true,
@@ -68,8 +68,8 @@ describe('CountyDrawer', () => {
 
   it('顯示原始真實值（含單位）', () => {
     render(<CountyDrawer risk={scored} onClose={() => {}} />)
-    expect(screen.getByText('失業率')).toBeInTheDocument()
-    expect(screen.getByText('5.2%')).toBeInTheDocument()
+    expect(screen.getByText('每戶可支配所得')).toBeInTheDocument()
+    expect(screen.getByText('95.0 萬元')).toBeInTheDocument()
     expect(screen.getByText('房價所得比')).toBeInTheDocument()
     expect(screen.getByText('14.6 倍')).toBeInTheDocument()
   })

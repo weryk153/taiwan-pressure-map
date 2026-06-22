@@ -9,7 +9,7 @@ export const SOURCE_LABEL: Record<string, string> = {
 
 /** 子指標的「原始真實值」標籤（與壓力框架 metrics.* 不同：這是具體統計名）。 */
 export const RAW_LABEL: Record<MetricKey, string> = {
-  economic: '失業率',
+  economic: '每戶可支配所得',
   housing: '房價所得比',
   demographic: '老化指數',
   safety: '刑案率',
@@ -20,7 +20,7 @@ export const RAW_LABEL: Record<MetricKey, string> = {
 export function formatRaw(metric: MetricKey, v: number): string {
   switch (metric) {
     case 'economic':
-      return `${v.toFixed(1)}%`
+      return `${v.toFixed(1)} 萬元`
     case 'housing':
       return `${v.toFixed(1)} 倍`
     case 'demographic':
