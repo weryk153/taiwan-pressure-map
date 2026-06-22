@@ -1,12 +1,18 @@
 import type { RiskLevel } from './types'
 
-/** 紙上熱度色階（低＝淡麥，往上漸深至磚紅、深栗，配米白紙底） */
+/**
+ * 紙上熱度色階（低＝淡麥金，往上漸深至磚紅、深栗，配米白紙底）。
+ * 實測各縣市分數集中在 30–65，故把對比集中在這段、並加大明暗差，
+ * 讓相近分數也分得出來；30 以下／75 以上資料罕至，僅作錨點。
+ */
 const STOPS: { at: number; color: string }[] = [
-  { at: 0, color: '#e7d2a0' },   // 低：淡麥
-  { at: 30, color: '#d6a85c' },  // 偏低：赭黃
-  { at: 50, color: '#c47e3c' },  // 中：琥珀橙
-  { at: 75, color: '#b5532f' },  // 高：磚紅
-  { at: 100, color: '#8a2f23' }, // 危急：深栗
+  { at: 0, color: '#f4ebd2' },   // 極低（資料罕至）：近紙色
+  { at: 30, color: '#ecd28a' },  // 低：淡麥金
+  { at: 42, color: '#d9aa57' },  // 偏低：赭黃
+  { at: 52, color: '#c5803a' },  // 中：琥珀橙
+  { at: 62, color: '#ad5a2c' },  // 偏高：燒橙
+  { at: 75, color: '#8f3b22' },  // 高：磚紅
+  { at: 100, color: '#6b1d16' }, // 危急：深栗
 ]
 
 function lerp(a: number, b: number, t: number): number {

@@ -8,9 +8,10 @@ import type { Severity } from '@/lib/disasters/types'
 
 type ColorBy = 'composite' | MetricKey
 
-function valueFor(r: CountyRisk, colorBy: ColorBy): number {
-  if (colorBy === 'composite') return r.score ?? 0
-  return r.subScores[colorBy] ?? 0
+// 當前維度的值；缺值回 null（→ 顯示無資料灰，而非當成 0 上色，避免誤導）
+function valueFor(r: CountyRisk, colorBy: ColorBy): number | null {
+  if (colorBy === 'composite') return r.score
+  return r.subScores[colorBy] ?? null
 }
 
 // 米白紙底；縣市以熱度色塊呈現（行政區），縣市間留紙色細縫，編輯/印刷質感。
@@ -65,12 +66,12 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes
       features: geo.features.map((f: any) => {
         const code = f.properties.COUNTYCODE
         const r = byCode.get(code)
-        const noData = !r || r.score === null
+        const value = r ? valueFor(r, colorBy) : null
         return {
           ...f,
           properties: {
             ...f.properties,
-            _color: noData ? NO_DATA_COLOR : scoreColor(valueFor(r!, colorBy)),
+            _color: value == null ? NO_DATA_COLOR : scoreColor(value),
             _hl: hlSet.has(code) ? 1 : 0,
             _evt: markSet.has(code) ? 1 : 0,
           },
@@ -94,7 +95,7 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes
         mapStyle={STYLE as any}
         initialViewState={{ longitude: 120.7, latitude: 23.8, zoom: 6.6 }}
         minZoom={6}
-        maxZoom={10.5}
+        maxZoom={11}
         dragRotate={false}
         touchPitch={false}
         pitchWithRotate={false}
@@ -120,9 +121,10 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes
               id="county-line"
               type="line"
               paint={{
-                'line-color': ['interpolate', ['linear'], ['zoom'], 7, PAPER, 9, '#a8967a'],
-                'line-width': ['interpolate', ['linear'], ['zoom'], 7, 0.6, 10, 0.9],
-                'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.5, 9, 0.62],
+                // 總覽時近紙色細縫（乾淨）；拉近後轉為清楚的暖墨色，作為行政區「容器」邊界
+                'line-color': ['interpolate', ['linear'], ['zoom'], 7, PAPER, 9, '#6b5640'],
+                'line-width': ['interpolate', ['linear'], ['zoom'], 7, 0.6, 10, 1.0],
+                'line-opacity': ['interpolate', ['linear'], ['zoom'], 7, 0.45, 9, 0.78],
               }}
             />
             {/* 事件縣市：青色細實線輪廓（勾選的事件圖層中有事件的縣市） */}
@@ -130,7 +132,7 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes
               id="county-event"
               type="line"
               filter={['==', ['get', '_evt'], 1]}
-              paint={{ 'line-color': '#13556b', 'line-width': 1.3, 'line-opacity': 0.85 }}
+              paint={{ 'line-color': '#2f7d97', 'line-width': 0.9, 'line-opacity': 0.5 }}
             />
             {/* 點選事件 → 其縣市紅色虛線高亮（與事件縣市青框冷暖對比）。先鋪紙色襯底，深色縣市上也清楚 */}
             <Layer
@@ -175,9 +177,10 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes
               type="line"
               beforeId="county-line"
               paint={{
-                'line-color': '#bcae96',
-                'line-width': ['interpolate', ['linear'], ['zoom'], 8.5, 0.4, 10.5, 0.6],
-                'line-opacity': ['interpolate', ['linear'], ['zoom'], 8.3, 0, 9.5, 0.4, 10.5, 0.55],
+                // 比底色深的暖色才看得見；比縣界細、淡，維持層級
+                'line-color': '#8a7656',
+                'line-width': ['interpolate', ['linear'], ['zoom'], 8, 0.4, 11, 0.65],
+                'line-opacity': ['interpolate', ['linear'], ['zoom'], 8, 0, 9, 0.5, 11, 0.62],
               }}
             />
           </Source>

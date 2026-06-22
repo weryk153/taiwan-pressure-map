@@ -1,7 +1,11 @@
 import { scoreColor } from '@/lib/colors'
-import { type CountyRisk, type MetricKey } from '@/lib/types'
+import { METRIC_KEYS, type CountyRisk, type MetricKey } from '@/lib/types'
 
 type ColorBy = 'composite' | MetricKey
+
+// 缺幾項指標（離島常缺房價所得比、失業率）→ 分數僅供參考
+const missingCount = (r: CountyRisk): number =>
+  METRIC_KEYS.filter((k) => r.subScores[k] == null).length
 
 interface Props {
   risks: CountyRisk[]
@@ -44,6 +48,14 @@ export function ControlPanel({ risks, colorBy, selectedCode, onSelect }: Props) 
                   }`}
                 >
                   {r.name}
+                  {missingCount(r) > 0 && (
+                    <span
+                      className="ml-1.5 align-middle text-[10px] text-[var(--color-ink-2)]/70 border border-[var(--color-ink)]/20 rounded-sm px-1 py-px whitespace-nowrap"
+                      title={`有 ${missingCount(r)} 項指標未發布（離島部分統計從缺），分數僅供參考`}
+                    >
+                      資料不全
+                    </span>
+                  )}
                 </span>
                 <span className="w-16 h-[3px] rounded-full bg-[var(--color-ink)]/10 relative overflow-hidden">
                   {v !== null && (

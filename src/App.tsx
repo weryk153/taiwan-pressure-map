@@ -4,7 +4,6 @@ import { MapView } from '@/components/MapView'
 import { ControlPanel } from '@/components/ControlPanel'
 import { LayerControl } from '@/components/LayerControl'
 import { CountyDrawer } from '@/components/CountyDrawer'
-import { Legend } from '@/components/Legend'
 import { DataSources } from '@/components/DataSources'
 import { AlertsList } from '@/components/AlertsList'
 import { Methodology } from '@/components/Methodology'
@@ -92,6 +91,10 @@ export default function App() {
             </div>
           </div>
         </div>
+        <p className="mt-2.5 text-[12px] sm:text-[13px] leading-relaxed text-[var(--color-ink-2)] max-w-3xl">
+          {t('app.lede')}
+          <span className="text-[var(--color-ink)]">{t('app.ledeKey')}</span>
+        </p>
       </header>
 
       <div className="flex-1 flex relative overflow-hidden">
@@ -165,7 +168,6 @@ export default function App() {
                 layers={layers}
                 onToggleLayer={toggleLayer}
               />
-              <Legend />
               <CountyDrawer
                 risk={selected}
                 onClose={() => setSelectedCode(null)}

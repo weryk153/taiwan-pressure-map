@@ -55,7 +55,7 @@ describe('LayerControl', () => {
   it('collapses when the header is clicked', () => {
     renderControl()
     expect(screen.getByRole('button', { name: '綜合' })).toBeInTheDocument()
-    fireEvent.click(screen.getByRole('button', { name: /圖層/ }))
+    fireEvent.click(screen.getByRole('button', { name: /地圖顯示/ }))
     expect(screen.queryByRole('button', { name: '綜合' })).not.toBeInTheDocument()
   })
 })

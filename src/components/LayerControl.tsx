@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Legend } from './Legend'
 import { METRIC_KEYS, type MetricKey } from '@/lib/types'
 import type { DisasterEvent, DisasterType } from '@/lib/disasters/types'
 
@@ -32,18 +33,18 @@ export function LayerControl({ colorBy, onColorBy, events, layers, onToggleLayer
   }, {})
 
   return (
-    <div className="absolute top-5 left-5 w-[190px] bg-[var(--color-paper)]/90 backdrop-blur-sm border border-[var(--color-ink)]/15 rounded-sm shadow-sm">
+    <div className="absolute top-5 left-5 w-[200px] max-h-[calc(100vh-7rem)] flex flex-col bg-[var(--color-paper)]/90 backdrop-blur-sm border border-[var(--color-ink)]/15 rounded-sm shadow-sm">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center px-3.5 pt-2.5 pb-2 select-none"
+        className="shrink-0 w-full flex items-center px-3.5 pt-2.5 pb-2 select-none"
         aria-expanded={open}
       >
-        <span className="kicker">圖層</span>
+        <span className="kicker">地圖顯示</span>
         <span className={`ml-auto text-[var(--color-ink-2)] text-[10px] transition-transform ${open ? 'rotate-90' : ''}`}>▸</span>
       </button>
 
       {open && (
-        <div className="px-3.5 pb-3">
+        <div className="flex-1 min-h-0 overflow-y-auto px-3.5 pb-3">
           <div className="kicker mb-2 text-[var(--color-ink-2)]/80">{t('panel.colorBy')}</div>
           <ul className="flex flex-col">
             {dims.map((d) => {
@@ -100,6 +101,7 @@ export function LayerControl({ colorBy, onColorBy, events, layers, onToggleLayer
           </div>
         </div>
       )}
+      <Legend />
     </div>
   )
 }

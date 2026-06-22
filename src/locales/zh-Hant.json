@@ -1,7 +1,9 @@
 {
   "app": {
     "title": "台灣縣市壓力指數",
-    "subtitle": "各縣市綜合壓力指數"
+    "subtitle": "各縣市綜合壓力指數",
+    "lede": "以失業率、房價所得比、老化指數、刑案率、醫療資源等政府公開統計，換算各縣市的相對壓力分數（0–100）。",
+    "ledeKey": "分數越高、顏色越深＝壓力越大；點選縣市可看各項細節與趨勢。"
   },
   "metrics": {
     "composite": "綜合",
@@ -12,7 +14,7 @@
     "healthcare": "醫療資源"
   },
   "panel": {
-    "colorBy": "著色維度",
+    "colorBy": "壓力面向",
     "ranking": "縣市排行榜"
   },
   "drawer": {
@@ -28,7 +30,7 @@
   },
   "events": { "title": "目前警示", "none": "目前無警示", "toggle": "顯示即時災害" },
   "layers": {
-    "title": "事件圖層",
+    "title": "即時事件",
     "incident": "重大新聞",
     "alert": "災防告警",
     "weather": "天氣特報",
