@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import MapGL, { Source, Layer, type MapRef } from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import bbox from '@turf/bbox'
+import { computeCentroids } from '@/lib/centroids'
 import { scoreColor, NO_DATA_COLOR } from '@/lib/colors'
 import type { CountyRisk, MetricKey } from '@/lib/types'
 import type { Severity } from '@/lib/disasters/types'
@@ -35,10 +36,11 @@ interface Props {
   selectedCode: string | null
   onSelect: (code: string) => void
   highlightCodes?: string[] // 點選某事件時，高亮它影響的縣市
-  marks?: Mark[] // 勾選的事件圖層：受影響縣市的事件圓點
+  marks?: Mark[] // 勾選的事件圖層：受影響縣市
+  eventPoints?: { lng: number; lat: number; code: string }[] // 有精準座標的事件（地震/區級新聞）
 }
 
-export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes, marks }: Props) {
+export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes, marks, eventPoints }: Props) {
   const mapRef = useRef<MapRef>(null)
   const [geo, setGeo] = useState<any>(null)
   const [towns, setTowns] = useState<any>(null)
@@ -85,6 +87,51 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes
     const [minX, minY, maxX, maxY] = bbox(geo)
     mapRef.current.fitBounds([[minX, minY], [maxX, maxY]], { padding: 64, maxZoom: 8.5, duration: 0 })
   }, [geo])
+
+  // 擴散波原點：優先用事件精準座標（地震/區級新聞）；該縣市無精準點才退回縣市中心
+  const centroids = useMemo(() => (geo ? computeCentroids(geo) : {}), [geo])
+  const rippleGeo = useMemo(() => {
+    const pt = (coords: [number, number]) => ({
+      type: 'Feature' as const,
+      geometry: { type: 'Point' as const, coordinates: coords },
+      properties: {},
+    })
+    const feats = []
+    const preciseCodes = new Set<string>()
+    for (const p of eventPoints ?? []) {
+      feats.push(pt([p.lng, p.lat]))
+      if (p.code) preciseCodes.add(p.code)
+    }
+    for (const code of markSet) {
+      if (!preciseCodes.has(code) && centroids[code]) feats.push(pt(centroids[code]))
+    }
+    return { type: 'FeatureCollection' as const, features: feats }
+  }, [markSet, centroids, eventPoints])
+
+  // 擴散波動畫：有即時事件時，兩圈青色環從縣市中心向外擴散並淡出（雷達感）。不用靜態圈圈。
+  const hasEvents = markSet.size > 0
+  useEffect(() => {
+    if (!hasEvents) return
+    let raf = 0
+    const PERIOD = 2400
+    const MAX_R = 34
+    const tick = () => {
+      const map = mapRef.current?.getMap()
+      if (map && map.getLayer('event-ripple') && map.getLayer('event-ripple-2')) {
+        const set = (id: string, phase: number) => {
+          const p = ((performance.now() / PERIOD + phase) % 1) // 0→1
+          const r = (1 - (1 - p) * (1 - p)) * MAX_R + 2 // easeOut，2→36px
+          map.setPaintProperty(id, 'circle-radius', r)
+          map.setPaintProperty(id, 'circle-stroke-opacity', (1 - p) * 0.85)
+        }
+        set('event-ripple', 0)
+        set('event-ripple-2', 0.5) // 半週期錯開 → 連續波
+      }
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [hasEvents])
 
   const sel = selectedCode ?? ''
 
@@ -182,6 +229,35 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes
                 'line-color': '#8a7656',
                 'line-width': ['interpolate', ['linear'], ['zoom'], 8, 0.4, 11, 0.65],
                 'line-opacity': ['interpolate', ['linear'], ['zoom'], 8, 0, 9, 0.5, 11, 0.62],
+              }}
+            />
+          </Source>
+        )}
+        {/* 擴散波：事件縣市中心向外擴散的青色環（雷達感），半徑與透明度由 rAF 動畫驅動 */}
+        {hasEvents && (
+          <Source id="event-ripple" type="geojson" data={rippleGeo}>
+            <Layer
+              id="event-ripple"
+              type="circle"
+              paint={{
+                'circle-radius': 2,
+                'circle-color': '#ffffff',
+                'circle-opacity': 0,
+                'circle-stroke-color': '#ffffff',
+                'circle-stroke-width': 2,
+                'circle-stroke-opacity': 0,
+              }}
+            />
+            <Layer
+              id="event-ripple-2"
+              type="circle"
+              paint={{
+                'circle-radius': 2,
+                'circle-color': '#ffffff',
+                'circle-opacity': 0,
+                'circle-stroke-color': '#ffffff',
+                'circle-stroke-width': 2,
+                'circle-stroke-opacity': 0,
               }}
             />
           </Source>

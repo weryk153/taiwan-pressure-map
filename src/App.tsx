@@ -65,6 +65,15 @@ export default function App() {
     return [...m.entries()].map(([code, v]) => ({ code, ...v }))
   }, [visibleEvents])
 
+  // 有精準座標的事件（地震 / 標題寫到區鄉鎮的新聞）→ 擴散波從該點發出
+  const eventPoints = useMemo(
+    () =>
+      visibleEvents
+        .filter((e) => e.lat != null && e.lon != null)
+        .map((e) => ({ lng: e.lon!, lat: e.lat!, code: e.countyCodes[0] ?? '' })),
+    [visibleEvents],
+  )
+
   return (
     <div className="h-full flex flex-col bg-[var(--color-paper)]">
       <header className="px-5 sm:px-7 pt-5 pb-3 border-b border-[var(--color-ink)]/15 rise">
@@ -160,6 +169,7 @@ export default function App() {
                 onSelect={setSelectedCode}
                 highlightCodes={highlight?.codes ?? []}
                 marks={marks}
+                eventPoints={eventPoints}
               />
               <LayerControl
                 colorBy={colorBy}
