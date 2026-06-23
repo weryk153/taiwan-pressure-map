@@ -65,14 +65,19 @@ export default function App() {
     return [...m.entries()].map(([code, v]) => ({ code, ...v }))
   }, [visibleEvents])
 
-  // 有精準座標的事件（地震 / 標題寫到區鄉鎮的新聞）→ 擴散波從該點發出
-  const eventPoints = useMemo(
-    () =>
-      visibleEvents
-        .filter((e) => e.lat != null && e.lon != null)
-        .map((e) => ({ lng: e.lon!, lat: e.lat!, code: e.countyCodes[0] ?? '' })),
-    [visibleEvents],
-  )
+  // 只有「重大新聞」要閃（擴散波）：地震/特報/告警維持靜態青框、不脈動。
+  // 有寫到區鄉鎮的新聞 → 從該區精準發波；沒寫 → 退回該縣市中心。
+  const { eventPoints, rippleCounties } = useMemo(() => {
+    const pts: { lng: number; lat: number; code: string }[] = []
+    const fallback = new Set<string>()
+    for (const e of visibleEvents) {
+      if (e.type !== 'incident') continue
+      if (e.lat != null && e.lon != null) pts.push({ lng: e.lon, lat: e.lat, code: e.countyCodes[0] ?? '' })
+      else for (const c of e.countyCodes) fallback.add(c)
+    }
+    const precise = new Set(pts.map((p) => p.code))
+    return { eventPoints: pts, rippleCounties: [...fallback].filter((c) => !precise.has(c)) }
+  }, [visibleEvents])
 
   return (
     <div className="h-full flex flex-col bg-[var(--color-paper)]">
@@ -170,6 +175,7 @@ export default function App() {
                 highlightCodes={highlight?.codes ?? []}
                 marks={marks}
                 eventPoints={eventPoints}
+                rippleCounties={rippleCounties}
               />
               <LayerControl
                 colorBy={colorBy}
