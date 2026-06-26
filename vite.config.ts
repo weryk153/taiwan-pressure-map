@@ -13,7 +13,6 @@ export default defineConfig({
       output: {
         manualChunks(id: string) {
           if (id.includes('maplibre-gl') || id.includes('react-map-gl')) return 'maplibre'
-          if (id.includes('recharts') || id.includes('d3-') || id.includes('victory-vendor')) return 'recharts'
         },
       },
     },

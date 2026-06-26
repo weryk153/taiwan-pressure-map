@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
+import { Sparkline } from './Sparkline'
 import { scoreColor, LEVEL_LABEL } from '@/lib/colors'
 import { toRiskLevel } from '@/lib/score'
 import { METRIC_KEYS, type CountyRisk, type PressurePeriod } from '@/lib/types'
@@ -109,25 +109,7 @@ export function CountyDrawer({ risk, onClose, events, history }: Props) {
       <div className="mb-8">
         {series.length >= 2 ? (
           <div className="-ml-2">
-            <ResponsiveContainer width="100%" height={120}>
-              <LineChart data={series} margin={{ top: 6, right: 8, bottom: 0, left: 8 }}>
-                <XAxis
-                  dataKey="asOf"
-                  tick={{ fontSize: 10, fill: 'var(--color-ink-2)' }}
-                  tickLine={false}
-                  axisLine={{ stroke: 'var(--color-ink)', strokeOpacity: 0.15 }}
-                />
-                <YAxis domain={[0, 100]} hide />
-                <Line
-                  type="monotone"
-                  dataKey="score"
-                  stroke="var(--color-accent)"
-                  strokeWidth={2}
-                  dot={{ r: 2, fill: 'var(--color-accent)' }}
-                  isAnimationActive={false}
-                />
-              </LineChart>
-            </ResponsiveContainer>
+            <Sparkline data={series} height={120} />
           </div>
         ) : (
           <div>
