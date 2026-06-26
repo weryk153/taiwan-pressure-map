@@ -10,7 +10,7 @@ import { Methodology } from '@/components/Methodology'
 import { useRiskData } from '@/hooks/useRiskData'
 import { useDisasterEvents } from '@/hooks/useDisasterEvents'
 import { useIncidents } from '@/hooks/useIncidents'
-import { eventsByCounty } from '@/lib/disasters/group'
+import { eventsByCounty, recentEvents } from '@/lib/disasters/group'
 import type { MetricKey } from '@/lib/types'
 import type { DisasterType, Severity } from '@/lib/disasters/types'
 
@@ -187,7 +187,7 @@ export default function App() {
               <CountyDrawer
                 risk={selected}
                 onClose={() => setSelectedCode(null)}
-                events={selected ? byCounty[selected.code] ?? [] : []}
+                events={selected ? recentEvents(byCounty[selected.code] ?? [], 3) : []}
                 history={data.history}
               />
             </div>

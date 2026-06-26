@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { eventsByCounty, sortBySeverity, todaysEventsLatestFirst } from './group'
+import { eventsByCounty, sortBySeverity, todaysEventsLatestFirst, recentEvents } from './group'
 import type { DisasterEvent } from './types'
 
 const ev = (id: string, codes: string[], severity: any, time = ''): DisasterEvent =>
@@ -45,5 +45,28 @@ describe('todaysEventsLatestFirst', () => {
     // 台灣 2026-06-26 00:30 = UTC 2026-06-25 16:30
     const out = todaysEventsLatestFirst([ev('justAfterMidnight', [], 'info', '2026-06-26 00:30')], now)
     expect(out.map((e) => e.id)).toEqual(['justAfterMidnight'])
+  })
+})
+
+describe('recentEvents', () => {
+  // 台灣時間 2026-06-26 12:00
+  const now = Date.parse('2026-06-26T04:00:00Z')
+
+  it('保留近 3 天的事件，最新排最前；更舊的剔除', () => {
+    const out = recentEvents(
+      [
+        ev('today', [], 'info', '2026-06-26 09:00'),
+        ev('twoDaysAgo', [], 'warning', '2026-06-24 20:00'),
+        ev('fourDaysAgo', [], 'severe', '2026-06-22 09:00'),
+      ],
+      3,
+      now,
+    )
+    expect(out.map((e) => e.id)).toEqual(['today', 'twoDaysAgo'])
+  })
+
+  it('忽略無法解析的時間', () => {
+    const out = recentEvents([ev('bad', [], 'info', ''), ev('ok', [], 'info', '2026-06-26 09:00')], 3, now)
+    expect(out.map((e) => e.id)).toEqual(['ok'])
   })
 })

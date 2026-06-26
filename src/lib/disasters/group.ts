@@ -28,3 +28,19 @@ export function todaysEventsLatestFirst(
     .sort((a, b) => b.t - a.t)
     .map(({ e }) => e)
 }
+
+const DAY_MS = 86_400_000
+
+/** 只保留近 N 天（以台灣時間解析）的事件，最新的排最前。 */
+export function recentEvents(
+  events: DisasterEvent[],
+  days: number,
+  now: number = Date.now(),
+): DisasterEvent[] {
+  const cutoff = now - days * DAY_MS
+  return events
+    .map((e) => ({ e, t: parseTaiwanTime(e.time) }))
+    .filter(({ t }) => !Number.isNaN(t) && t >= cutoff)
+    .sort((a, b) => b.t - a.t)
+    .map(({ e }) => e)
+}
