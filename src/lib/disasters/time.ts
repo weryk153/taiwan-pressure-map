@@ -16,6 +16,18 @@ export function parseTaiwanTime(s: string): number {
   return Date.parse(str)
 }
 
+/** 台灣時區的日期鍵（YYYY-MM-DD），用於判斷兩個時間是否同一天。無效則回空字串。 */
+export function taipeiDayKey(ms: number): string {
+  if (Number.isNaN(ms)) return ''
+  // en-CA 的日期格式即 YYYY-MM-DD。
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: TPE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date(ms))
+}
+
 /** 顯示用：任何有效時間 → 台灣時間「MM-DD HH:mm」（24 小時制）。無法解析則原樣回傳。 */
 export function formatTaipei(time: string | undefined | null): string {
   if (!time) return ''

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import '@/lib/i18n'
 import { AlertsList } from './AlertsList'
@@ -15,6 +15,10 @@ const incident: DisasterEvent = {
 }
 
 describe('AlertsList', () => {
+  // 清單只顯示台灣「今天」的事件，固定系統時間讓 fixture 視為今天。
+  beforeEach(() => vi.setSystemTime(Date.parse('2026-01-02T12:00:00+08:00')))
+  afterEach(() => vi.useRealTimers())
+
   it('shows the empty state when there are no events', () => {
     render(<AlertsList events={[]} />)
     expect(screen.getByText('目前無警示')).toBeInTheDocument()

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { sortBySeverity } from '@/lib/disasters/group'
+import { todaysEventsLatestFirst } from '@/lib/disasters/group'
 import { BY_CODE } from '@/lib/counties'
 import type { DisasterEvent } from '@/lib/disasters/types'
 
@@ -21,7 +21,7 @@ interface Props {
 
 export function AlertsList({ events, activeId, onSelectEvent }: Props) {
   const { t } = useTranslation()
-  const sorted = sortBySeverity(events)
+  const sorted = todaysEventsLatestFirst(events)
   return (
     <div className="border-t border-[var(--color-ink)]/15 px-6 py-4 bg-[var(--color-paper)]">
       <div className="kicker mb-2.5 flex items-center">
