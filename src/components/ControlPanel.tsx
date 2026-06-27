@@ -3,7 +3,7 @@ import { METRIC_KEYS, type CountyRisk, type MetricKey } from '@/lib/types'
 
 type ColorBy = 'composite' | MetricKey
 
-// 缺幾項指標（離島常缺房價所得比、失業率）→ 分數僅供參考
+// 缺幾項指標（離島常缺房價所得比、每戶可支配所得）→ 分數僅供參考
 const missingCount = (r: CountyRisk): number =>
   METRIC_KEYS.filter((k) => r.subScores[k] == null).length
 

@@ -23,7 +23,7 @@ export interface CountyRisk {
   name: string
   score: number | null
   subScores: Partial<Record<MetricKey, number>>
-  rawValues: Partial<Record<MetricKey, number>> // 原始真實值（失業率%/老化指數/刑案率/病床/房價所得比）
+  rawValues: Partial<Record<MetricKey, number>> // 原始真實值（每戶可支配所得/老化指數/刑案率/病床/房價所得比）
   confidence: number
   asOf: string | null
   hasData: boolean
