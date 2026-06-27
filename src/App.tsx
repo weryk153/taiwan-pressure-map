@@ -29,6 +29,8 @@ export default function App() {
   const [selectedCode, setSelectedCode] = useState<string | null>(null)
   const [panelOpen, setPanelOpen] = useState(false)
   const [highlight, setHighlight] = useState<{ id: string; codes: string[] } | null>(null)
+  // 相機飛行目標：每次點事件給一個新物件，MapView 偵測到就飛過去（精準新聞飛該點，否則 fit 縣市）
+  const [focus, setFocus] = useState<{ codes: string[]; lng?: number; lat?: number } | null>(null)
   const [layers, setLayers] = useState<Set<DisasterType>>(() => new Set(ALL_LAYERS))
 
   const risks = data?.risks
@@ -50,6 +52,15 @@ export default function App() {
       next.has(t) ? next.delete(t) : next.add(t)
       return next
     })
+
+  // 點左側事件：高亮受影響縣市 → 飛到該縣市（精準新聞飛該點）→ 開啟縣市抽屜
+  const onSelectEvent = (ev: { id: string; countyCodes: string[]; lat?: number; lon?: number }) => {
+    const code = ev.countyCodes[0] ?? null
+    setHighlight({ id: ev.id, codes: ev.countyCodes })
+    setFocus({ codes: ev.countyCodes, lng: ev.lon, lat: ev.lat })
+    setSelectedCode(code)
+    setPanelOpen(false) // 手機版：關掉左側面板，露出地圖與抽屜
+  }
 
   // 受影響縣市的事件圓點：顏色取最嚴重、大小依事件數
   const marks = useMemo(() => {
@@ -158,9 +169,7 @@ export default function App() {
                 <AlertsList
                   events={visibleEvents}
                   activeId={highlight?.id ?? null}
-                  onSelectEvent={(ev) =>
-                    setHighlight((h) => (h?.id === ev.id ? null : { id: ev.id, codes: ev.countyCodes }))
-                  }
+                  onSelectEvent={onSelectEvent}
                 />
                 <DataSources sources={data.sources} builtAt={data.builtAt} />
                 <Methodology />
@@ -173,6 +182,7 @@ export default function App() {
                 selectedCode={selectedCode}
                 onSelect={setSelectedCode}
                 highlightCodes={highlight?.codes ?? []}
+                focus={focus}
                 marks={marks}
                 eventPoints={eventPoints}
                 rippleCounties={rippleCounties}

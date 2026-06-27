@@ -36,12 +36,13 @@ interface Props {
   selectedCode: string | null
   onSelect: (code: string) => void
   highlightCodes?: string[] // 點選某事件時，高亮它影響的縣市
+  focus?: { codes: string[]; lng?: number; lat?: number } | null // 點事件時的相機飛行目標
   marks?: Mark[] // 勾選的事件圖層：受影響縣市
   eventPoints?: { lng: number; lat: number; code: string }[] // 重大新聞：區級精準座標
   rippleCounties?: string[] // 重大新聞但無區級座標 → 退回縣市中心發波
 }
 
-export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes, marks, eventPoints, rippleCounties }: Props) {
+export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes, focus, marks, eventPoints, rippleCounties }: Props) {
   const mapRef = useRef<MapRef>(null)
   const [geo, setGeo] = useState<any>(null)
   const [towns, setTowns] = useState<any>(null)
@@ -88,6 +89,20 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes
     const [minX, minY, maxX, maxY] = bbox(geo)
     mapRef.current.fitBounds([[minX, minY], [maxX, maxY]], { padding: 64, maxZoom: 8.5, duration: 0 })
   }, [geo])
+
+  // 點事件 → 飛到該位置：有區級座標飛該點，否則 fit 受影響縣市的範圍
+  useEffect(() => {
+    const map = mapRef.current
+    if (!focus || !geo || !map) return
+    if (focus.lat != null && focus.lng != null) {
+      map.flyTo({ center: [focus.lng, focus.lat], zoom: 9.5, duration: 900 })
+      return
+    }
+    const feats = geo.features.filter((f: any) => focus.codes.includes(f.properties.COUNTYCODE))
+    if (feats.length === 0) return
+    const [minX, minY, maxX, maxY] = bbox({ type: 'FeatureCollection', features: feats })
+    map.fitBounds([[minX, minY], [maxX, maxY]], { padding: 80, maxZoom: 9, duration: 900 })
+  }, [focus, geo])
 
   // 擴散波原點（只取「重大新聞」）：有區級座標用該點，否則退回縣市中心
   const centroids = useMemo(() => (geo ? computeCentroids(geo) : {}), [geo])
