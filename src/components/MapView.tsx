@@ -9,6 +9,9 @@ import type { Severity } from '@/lib/disasters/types'
 
 type ColorBy = 'composite' | MetricKey
 
+// 外島縣市（金門/連江/澎湖）：置中以本島為準時排除，避免本島偏離畫面中央
+const OUTLYING_CODES = new Set(['09007', '09020', '10016'])
+
 // 當前維度的值；缺值回 null（→ 顯示無資料灰，而非當成 0 上色，避免誤導）
 function valueFor(r: CountyRisk, colorBy: ColorBy): number | null {
   if (colorBy === 'composite') return r.score
@@ -84,11 +87,20 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes
     }
   }, [geo, byCode, colorBy, hlSet, markSet])
 
-  useEffect(() => {
-    if (!geo || !mapRef.current) return
-    const [minX, minY, maxX, maxY] = bbox(geo)
-    mapRef.current.fitBounds([[minX, minY], [maxX, maxY]], { padding: 64, maxZoom: 8.5, duration: 0 })
+  // 置中以「台灣本島」為準：金門/連江/澎湖會把範圍往外拉、使本島偏右，故排除後再 fit
+  const mainBounds = useMemo(() => {
+    if (!geo) return null
+    const feats = geo.features.filter(
+      (f: any) => !OUTLYING_CODES.has(f.properties.COUNTYCODE),
+    )
+    return bbox({ type: 'FeatureCollection', features: feats })
   }, [geo])
+
+  useEffect(() => {
+    if (!mainBounds || !mapRef.current) return
+    const [minX, minY, maxX, maxY] = mainBounds
+    mapRef.current.fitBounds([[minX, minY], [maxX, maxY]], { padding: 64, maxZoom: 8.5, duration: 0 })
+  }, [mainBounds])
 
   // 點事件 → 飛到該位置：有區級座標飛該點，否則 fit 受影響縣市的範圍
   useEffect(() => {
@@ -185,6 +197,10 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes
         dragRotate={false}
         touchPitch={false}
         pitchWithRotate={false}
+        onLoad={(e) => {
+          // dragRotate 只擋桌機；手機兩指旋轉得另外關掉，地圖永遠保持正北
+          e.target.touchZoomRotate.disableRotation()
+        }}
         interactiveLayerIds={['county-fill']}
         onZoomEnd={(e) => {
           if (e.viewState.zoom >= 7.8) setZoomedIn(true)
