@@ -159,6 +159,19 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes
 
   const sel = selectedCode ?? ''
 
+  // 拖曳邊界：全部縣市範圍（含金門/馬祖）外加寬鬆邊距。
+  // 可自由平移，但不會把整個台灣拖出畫面外（手機慣性甩動時尤其明顯）。
+  const maxBounds = useMemo(() => {
+    if (!geo) return undefined
+    const [minX, minY, maxX, maxY] = bbox(geo)
+    const padX = (maxX - minX) * 0.5
+    const padY = (maxY - minY) * 0.5
+    return [
+      [minX - padX, minY - padY],
+      [maxX + padX, maxY + padY],
+    ] as [[number, number], [number, number]]
+  }, [geo])
+
   return (
     <div className="absolute inset-0">
       <MapGL
@@ -168,6 +181,7 @@ export function MapView({ risks, colorBy, selectedCode, onSelect, highlightCodes
         initialViewState={{ longitude: 120.7, latitude: 23.8, zoom: 6.6 }}
         minZoom={6}
         maxZoom={11}
+        maxBounds={maxBounds}
         dragRotate={false}
         touchPitch={false}
         pitchWithRotate={false}
