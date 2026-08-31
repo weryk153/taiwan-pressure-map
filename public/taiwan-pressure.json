@@ -513,182 +513,6 @@
       "raw": 1822
     },
     {
-      "code": "10002",
-      "metric": "healthcare",
-      "value": 13,
-      "confidence": 0.8,
-      "asOf": "2024",
-      "raw": 72
-    },
-    {
-      "code": "10004",
-      "metric": "healthcare",
-      "value": 0,
-      "confidence": 0.8,
-      "asOf": "2024",
-      "raw": 133.3
-    },
-    {
-      "code": "10005",
-      "metric": "healthcare",
-      "value": 48,
-      "confidence": 0.8,
-      "asOf": "2024",
-      "raw": 51
-    },
-    {
-      "code": "10007",
-      "metric": "healthcare",
-      "value": 45,
-      "confidence": 0.8,
-      "asOf": "2024",
-      "raw": 53.1
-    },
-    {
-      "code": "10008",
-      "metric": "healthcare",
-      "value": 34,
-      "confidence": 0.8,
-      "asOf": "2024",
-      "raw": 59.3
-    },
-    {
-      "code": "10009",
-      "metric": "healthcare",
-      "value": 22,
-      "confidence": 0.8,
-      "asOf": "2024",
-      "raw": 66.8
-    },
-    {
-      "code": "10010",
-      "metric": "healthcare",
-      "value": 48,
-      "confidence": 0.8,
-      "asOf": "2024",
-      "raw": 51.1
-    },
-    {
-      "code": "10013",
-      "metric": "healthcare",
-      "value": 20,
-      "confidence": 0.8,
-      "asOf": "2024",
-      "raw": 68.2
-    },
-    {
-      "code": "10014",
-      "metric": "healthcare",
-      "value": 30,
-      "confidence": 0.8,
-      "asOf": "2024",
-      "raw": 62
-    },
-    {
-      "code": "10015",
-      "metric": "healthcare",
-      "value": 0,
-      "confidence": 0.8,
-      "asOf": "2024",
-      "raw": 134.1
-    },
-    {
-      "code": "10016",
-      "metric": "healthcare",
-      "value": 58,
-      "confidence": 0.8,
-      "asOf": "2024",
-      "raw": 45.3
-    },
-    {
-      "code": "10017",
-      "metric": "healthcare",
-      "value": 25,
-      "confidence": 0.8,
-      "asOf": "2024",
-      "raw": 65.1
-    },
-    {
-      "code": "10018",
-      "metric": "healthcare",
-      "value": 43,
-      "confidence": 0.8,
-      "asOf": "2024",
-      "raw": 54.1
-    },
-    {
-      "code": "10020",
-      "metric": "healthcare",
-      "value": 30,
-      "confidence": 0.8,
-      "asOf": "2024",
-      "raw": 62
-    },
-    {
-      "code": "63000",
-      "metric": "healthcare",
-      "value": 0,
-      "confidence": 0.8,
-      "asOf": "2024",
-      "raw": 81.7
-    },
-    {
-      "code": "64000",
-      "metric": "healthcare",
-      "value": 24,
-      "confidence": 0.8,
-      "asOf": "2024",
-      "raw": 65.3
-    },
-    {
-      "code": "65000",
-      "metric": "healthcare",
-      "value": 74,
-      "confidence": 0.8,
-      "asOf": "2024",
-      "raw": 35.9
-    },
-    {
-      "code": "66000",
-      "metric": "healthcare",
-      "value": 26,
-      "confidence": 0.8,
-      "asOf": "2024",
-      "raw": 64.4
-    },
-    {
-      "code": "67000",
-      "metric": "healthcare",
-      "value": 44,
-      "confidence": 0.8,
-      "asOf": "2024",
-      "raw": 53.5
-    },
-    {
-      "code": "68000",
-      "metric": "healthcare",
-      "value": 51,
-      "confidence": 0.8,
-      "asOf": "2024",
-      "raw": 49.5
-    },
-    {
-      "code": "09007",
-      "metric": "healthcare",
-      "value": 97,
-      "confidence": 0.8,
-      "asOf": "2024",
-      "raw": 22
-    },
-    {
-      "code": "09020",
-      "metric": "healthcare",
-      "value": 81,
-      "confidence": 0.8,
-      "asOf": "2024",
-      "raw": 31.5
-    },
-    {
       "code": "63000",
       "metric": "housing",
       "value": 80,
@@ -870,9 +694,8 @@
       "metric": "healthcare",
       "label": "每萬人病床數",
       "agency": "衛福部",
-      "asOf": "2024",
-      "status": "live",
-      "url": "https://data.gov.tw/dataset/6473"
+      "asOf": "-",
+      "status": "missing"
     },
     {
       "metric": "housing",
@@ -883,5 +706,5 @@
       "url": "https://pip.moi.gov.tw/Publicize/Info/E1050"
     }
   ],
-  "builtAt": "2026-08-24T20:16:03.172Z"
+  "builtAt": "2026-08-31T23:28:23.785Z"
 }
